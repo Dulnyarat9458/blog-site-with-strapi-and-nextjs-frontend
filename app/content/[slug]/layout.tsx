@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Fira_Code as FontSans } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider"
-import "./globals.css";
+
 
 import { Header } from "@/components/header";
-import { cn } from "../lib/utils"
+
 
 export const fontSans = FontSans({
   subsets: ["latin"],
@@ -25,26 +25,8 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head />
-      <body
-        className={cn(
-          "bg-background font-sans antialiased",
-          fontSans.variable
-        )}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Header />
-          <div className="container mx-auto min-h-screen">
-            {children}
-          </div>
-        </ThemeProvider>
-      </body>
-    </html>
+    <>
+      {children}
+    </>
   )
 }

@@ -1,7 +1,8 @@
 import { LastedGridView } from "@/components/lasted-grid-view"
 
 async function getData() {
-  const res = await fetch('http://localhost:1337/api/restaurants?populate=thumbnail&sort[0]=publishedAt:desc')
+  console.log(process.env.API_URL)
+  const res = await fetch(`${process.env.API_URL}/api/contents?populate=cover&sort[0]=createdAt:desc&pagination[limit]=5`)
   if (!res.ok) {
     throw new Error('Failed to fetch data')
   }

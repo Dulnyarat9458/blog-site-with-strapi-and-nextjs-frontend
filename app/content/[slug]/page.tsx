@@ -3,7 +3,7 @@ import { BlocksRenderer } from '@strapi/blocks-react-renderer';
 
 
 async function getData(slug: string) {
-  const res = await fetch(`http://localhost:1337/api/restaurants/${slug}?populate=thumbnail`);
+  const res = await fetch(`http://localhost:1339/api/contents/${slug}?populate=cover`);
   if (!res.ok) {
     throw new Error('Failed to fetch data')
   }
@@ -23,11 +23,11 @@ export default async function Home({ params }: { params: { slug: string } }) {
         <h1 className="text-center mx-auto font-bold text-4xl mt-14 mb-5">{content.data.attributes.name}</h1>
         <div className="flex justify-center items-center mx-auto">
           <Image
-            src={"http://localhost:1337"
-              + content.data.attributes.thumbnail.data.attributes.url}
+            src={"http://localhost:1339"
+              + content.data.attributes.cover.data.attributes.url}
             layout="responsive"
             objectFit="contain"
-            alt={content.data.attributes.thumbnail.data.attributes.alternativeText}
+            alt={content.data.attributes.cover.data.attributes.alternativeText}
             className="max-w-xl w-full h-11"
             width={16}
             height={9}

@@ -40,7 +40,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           disableTransitionOnChange
         >
           <Header />
-          <div className="container mx-auto min-h-screen">
+          <div className="container mx-auto min-h-screen-58">
             {children}
           </div>
         </ThemeProvider>

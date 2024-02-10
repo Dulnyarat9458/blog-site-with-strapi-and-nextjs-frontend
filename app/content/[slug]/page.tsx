@@ -1,23 +1,26 @@
 import Image from "next/image";
+import { Metadata } from 'next'
 import { BlocksRenderer } from '@strapi/blocks-react-renderer';
 
 
 async function getData(slug: string) {
-  const res = await fetch(`http://localhost:1339/api/contents/${slug}?populate=cover`);
+  const res: any = await fetch(`http://localhost:1339/api/contents/${slug}?populate=cover`);
   if (!res.ok) {
-    throw new Error('Failed to fetch data')
+    throw new Error('That content can’t be found.')
   }
   return res.json()
 }
 
+
+export const metadata: Metadata = {
+  title: "fsdf Site",
+  description: "this is my site that get content from strapi",
+};
+
+
 export default async function Home({ params }: { params: { slug: string } }) {
-
   const content = await getData(params.slug);
-  console.log(content.data)
-
-
   return (
-
     <div>
       <div className="mb-12">
         <h1 className="text-center mx-auto font-bold text-4xl mt-14 mb-5">{content.data.attributes.name}</h1>
@@ -34,11 +37,9 @@ export default async function Home({ params }: { params: { slug: string } }) {
           />
         </div>
       </div>
-
       <div>
         <BlocksRenderer content={content.data.attributes.description} />
       </div>
     </div>
-
   );
 }

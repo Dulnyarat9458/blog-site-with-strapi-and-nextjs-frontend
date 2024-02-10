@@ -12,13 +12,6 @@ export const fontSans = FontSans({
   weight: ["300", "400", "500", "600", "700"]
 })
 
-
-export const metadata: Metadata = {
-  title: "My Site",
-  description: "this is my site that get content from strapi",
-};
-
-
 interface RootLayoutProps {
   children: React.ReactNode;
 }

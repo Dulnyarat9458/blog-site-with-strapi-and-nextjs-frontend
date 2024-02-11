@@ -1,9 +1,18 @@
 import { LastedGridView } from "@/components/lasted-grid-view"
 
 async function getData() {
-  console.log(process.env.API_URL)
-  const res:any = await fetch(`${process.env.API_URL}/api/contents?populate=cover&sort[0]=createdAt:desc&pagination[limit]=5`)
-  console.log(res.status)
+
+  const options: any = {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.STRAPI_API_TOKEN}`,
+    },
+  };
+
+  const res = await fetch(`${process.env.API_URL}/api/contents?populate=cover&sort[0]=createdAt:desc&pagination[limit]=5`, options)
+
+  console.log(res)
+
   if (!res.ok) {
     throw new Error('Failed to fetch data')
   }

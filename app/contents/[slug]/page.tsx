@@ -16,10 +16,12 @@ export async function generateMetadata(
   const options: any = {
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${process.env.STRAPI_API_TOKEN}`,
+      'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,
     },
   };
-  const res: any = await fetch(`http://localhost:1339/api/contents/${slug}?populate=cover`, options);
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/contents/${slug}?populate=cover`;
+  const res: any = await fetch(url, options);
+  console.log(url)
   const contents = await res.json();
   return {
     title: contents.data.attributes.name,
@@ -32,11 +34,13 @@ async function getData(slug: string) {
   const options: any = {
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${process.env.STRAPI_API_TOKEN}`,
+      'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,
     },
   };
 
-  const res: any = await fetch(`http://localhost:1339/api/contents/${slug}?populate=cover`, options);
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/contents/${slug}?populate=cover`;
+  const res: any = await fetch(url, options);
+
   if (!res.ok) {
     throw new Error('That content can’t be found.')
   }
@@ -51,8 +55,7 @@ export default async function ContentPage({ params, searchParams }: Props) {
         <h1 className="text-center mx-auto font-bold text-4xl mt-14 mb-5">{content.data.attributes.name}</h1>
         <div className="flex justify-center items-center mx-auto">
           <Image
-            src={"http://localhost:1339"
-              + content.data.attributes.cover.data.attributes.url}
+            src={process.env.NEXT_PUBLIC_API_URL + "" + content.data.attributes.cover.data.attributes.url}
             layout="responsive"
             objectFit="contain"
             alt={content.data.attributes.cover.data.attributes.alternativeText}

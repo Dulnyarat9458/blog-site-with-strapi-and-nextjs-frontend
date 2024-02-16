@@ -25,7 +25,7 @@ async function getData(slug: string) {
     },
   };
 
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/categories/${slug}?populate[contents][populate][cover]=*`
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/tags/${slug}?populate[contents][populate][cover]=*`
   const res: any = await fetch(url, options);
 
   if (!res.ok) {
@@ -35,7 +35,7 @@ async function getData(slug: string) {
   return res.json()
 }
 
-export default async function ContentPage(props: Props) {
+export default async function TagsPage(props: Props) {
   const contents = await getData(props.params.slug);
 
   return (
@@ -47,6 +47,7 @@ export default async function ContentPage(props: Props) {
             contents.data.attributes.contents.data.map(
               (content: any) => {
                 return (
+
                   <Link href={"/contents/" + content.id}>
                     <Card className="h-full">
                       <CardHeader className="p-0">
@@ -67,12 +68,13 @@ export default async function ContentPage(props: Props) {
                       </CardFooter>
                     </Card>
                   </Link>
+
                 )
               }
             )
           }
         </div>
       </div>
-    </div >
+    </div>
   );
 }

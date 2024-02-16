@@ -1,6 +1,8 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Metadata, ResolvingMetadata } from 'next'
 import { BlocksRenderer } from '@strapi/blocks-react-renderer';
+
 
 
 type Props = {
@@ -30,7 +32,6 @@ export async function generateMetadata(
 }
 
 async function getData(slug: string) {
-
   const options: any = {
     headers: {
       'Content-Type': 'application/json',
@@ -38,7 +39,7 @@ async function getData(slug: string) {
     },
   };
 
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/contents/${slug}?populate=cover`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/contents/${slug}?populate[0]=cover&populate[1]=tags`;
   const res: any = await fetch(url, options);
 
   if (!res.ok) {
@@ -49,6 +50,7 @@ async function getData(slug: string) {
 
 export default async function ContentPage({ params, searchParams }: Props) {
   const content = await getData(params.slug);
+
   return (
     <div>
       <div className="mb-12">
@@ -67,6 +69,18 @@ export default async function ContentPage({ params, searchParams }: Props) {
       </div>
       <div>
         <BlocksRenderer content={content.data.attributes.block} />
+      </div>
+      <div className="my-8"></div>
+      <div><span>Tag:</span>
+        {
+          content.data.attributes.tags.data.map((tag: any) => {
+            return (
+              <Link href={`/tags/${tag.id}`}>
+                <span className="mx-2 bg-primary text-primary-foreground px-2 py-1 rounded-lg mb-8 duration-200 transition-all">{tag.attributes.name}</span>
+              </Link>
+            )
+          })
+        }
       </div>
     </div>
   );

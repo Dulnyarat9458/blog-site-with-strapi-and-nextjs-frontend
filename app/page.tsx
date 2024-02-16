@@ -1,4 +1,5 @@
-import { LastedGridView } from "@/components/lasted-grid-view"
+import { HighlightGridView } from "@/components/highlight-grid-view"
+import { LastedGridView } from "@/components/lasted-grid-view";
 
 async function getData() {
 
@@ -21,8 +22,11 @@ export default async function Home() {
   const contents = await getData();
   return (
     <>
-      <h1 className="text-center mx-auto font-bold text-4xl mt-14 mb-5">HIGHLIGTH</h1>
-      <LastedGridView contentData={contents.data} />
+      <h1 className="text-center mx-auto font-bold text-4xl mt-14 mb-5">HIGHLIGHT</h1>
+      <HighlightGridView contentData={contents.data} />
+      <div className="my-8"></div>
+      <h1 className="text-center mx-auto font-bold text-4xl mt-14 mb-5">LASTED</h1>
+      <LastedGridView contentData={contents.data}/>
     </>
   );
 }

@@ -32,7 +32,6 @@ export function Header() {
       .then(response => response.json())
       .then(data => {
         setCategories(data.data)
-        console.log(categories)
       }).catch((error) => console.error(error));
   }, [])
 
@@ -50,12 +49,10 @@ export function Header() {
               <NavigationMenuContent>
                 <ul className="w-full">
                   {
-                    categories?.map((category: any) => {
+                    categories?.map((category: any, index: number) => {
                       return (
-                
-                        <ListItem href={`/categories/${category.id}`} title={category.attributes.name} />
+                        <ListItem key={index} href={`/categories/${category.id}`} title={category.attributes.name} />
                       );
-
                     }) || <p>Loading...</p>
                   }
                 </ul>

@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils"
 import { AlignJustify, X } from "lucide-react"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
-
+import { useTheme } from "next-themes"
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -24,7 +24,8 @@ export function Header() {
   const [categories, setCategories] = useState([]);
   const [isSideOpen, setIsSideOpen] = useState(false);
   const [isMobileDarkMode, setIsMobileDarkmode] = useState(false);
-
+  const { setTheme } = useTheme()
+  
   useEffect(() => {
     const requestOptions: any = {
       method: "GET",
@@ -42,7 +43,12 @@ export function Header() {
   }, [])
 
   useEffect(() => {
-    
+    if (isMobileDarkMode) {
+      setTheme('dark')
+    } else {
+      setTheme('light')
+    }
+
   }, [isMobileDarkMode])
 
   const openSidebar = () => {

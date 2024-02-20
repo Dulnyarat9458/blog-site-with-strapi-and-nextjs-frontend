@@ -3,7 +3,11 @@
 import { useEffect, forwardRef, useState } from "react"
 import Link from "next/link"
 import { DarkModeToggle } from "@/components/darkmode-toggle"
+import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { AlignJustify, X } from "lucide-react"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
 
 import {
   NavigationMenu,
@@ -18,6 +22,8 @@ import {
 
 export function Header() {
   const [categories, setCategories] = useState([]);
+  const [isSideOpen, setIsSideOpen] = useState(false);
+  const [isMobileDarkMode, setIsMobileDarkmode] = useState(false);
 
   useEffect(() => {
     const requestOptions: any = {
@@ -35,33 +41,82 @@ export function Header() {
       }).catch((error) => console.error(error));
   }, [])
 
+  useEffect(() => {
+    
+  }, [isMobileDarkMode])
+
+  const openSidebar = () => {
+    setIsSideOpen(true);
+  }
+  const closeSidebar = () => {
+    setIsSideOpen(false);
+  }
+
   return (
-    <nav className="sticky top-0 z-50 py-2 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ">
-      <div className="container mx-auto flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold">MYSITE</Link>
-        <NavigationMenu>
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <DarkModeToggle />
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <NavigationMenuTrigger>Categories</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="w-full">
-                  {
-                    categories?.map((category: any, index: number) => {
-                      return (
-                        <ListItem key={index} href={`/categories/${category.id}`} title={category.attributes.name} />
-                      );
-                    }) || <p>Loading...</p>
-                  }
-                </ul>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
+    <>
+      <nav className="sticky top-0 z-50 py-2 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ">
+        <div className="container mx-auto flex justify-between items-center">
+          <Link href="/" className="text-2xl font-bold text-foreground">MYSITE</Link>
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem className="block md:hidden">
+                <Button variant="outline" size="icon" onClick={openSidebar}>
+                  <AlignJustify className="absolute h-[1.2rem] w-[1.2rem]" />
+                </Button>
+              </NavigationMenuItem>
+              <NavigationMenuItem className="hidden md:block">
+                <DarkModeToggle />
+              </NavigationMenuItem>
+              <NavigationMenuItem className="hidden md:block">
+                <NavigationMenuTrigger>Categories</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="w-full">
+                    {
+                      categories?.map((category: any, index: number) => {
+                        return (
+                          <ListItem key={index} href={`/categories/${category.id}`} title={category.attributes.name} />
+                        );
+                      }) || <p>Loading...</p>
+                    }
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
+      </nav>
+      <div className={`fixed overflow-hidden top-0 z-[100] w-full bg-background duration-300 ${isSideOpen ? 'h-full' : 'h-0'}`}>
+        <div className="h-full p-8">
+          <div className="flex items-center space-x-2 justify-center mb-4">
+            <Switch
+              id="dark-mode-switch"
+              checked={isMobileDarkMode}
+              onCheckedChange={setIsMobileDarkmode}
+            />
+            <Label htmlFor="dark-mode">Dark Mode</Label>
+          </div>
+          <div className="overflow-y-auto h-[85%]">
+            <ul className="w-full overflow-y-auto">
+              {
+                categories?.map((category: any, index: number) => {
+                  return (
+                    <Link href={`/categories/${category.id}`} onClick={closeSidebar}>
+                      <li className="my-5" key={index}>{category.attributes.name} </li>
+                    </Link>
+                  );
+                }) || <p>Loading...</p>
+              }
+            </ul>
+          </div>
+          <div className="flex items-center space-x-2 justify-center">
+            <Button variant="outline" size="icon" onClick={closeSidebar}>
+              <X className="absolute h-[1.2rem] w-[1.2rem]" />
+            </Button>
+          </div>
+        </div>
+
       </div>
-    </nav>
+    </>
   )
 }
 

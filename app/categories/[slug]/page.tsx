@@ -48,13 +48,13 @@ export default async function ContentPage(props: Props) {
               (content: any) => {
                 return (
                   <Link href={"/contents/" + content.id}>
-                    <Card className="h-full">
+                    <Card className="h-full border-border ">
                       <CardHeader className="p-0">
                         <Image
                           src={process.env.NEXT_PUBLIC_API_URL + "" + content.attributes.cover.data.attributes.url}
                           layout="responsive"
                           alt={content.attributes.cover.data.attributes.alternativeText}
-                          className="w-full aspect-square object-cover rounded-t"
+                          className="w-full aspect-square object-cover rounded-t-lg"
                           width={1200}
                           height={1200}
                         />

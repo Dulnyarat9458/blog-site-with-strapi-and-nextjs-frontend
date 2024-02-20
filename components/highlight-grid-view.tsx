@@ -9,7 +9,7 @@ async function getData() {
       'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,
     },
   };
-  
+
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/highlights?populate[content][populate][cover]=cover&sort[0]=createdAt:desc&pagination[limit]=5`;
   const res = await fetch(url, options)
   if (!res.ok) {
@@ -18,8 +18,8 @@ async function getData() {
   return res.json()
 }
 
-export async function HighlightGridView() {
-  const contentData = await getData();
+export  function HighlightGridView(props: any) {
+  const contentData = props.contentData;
 
   return (
     <div className="w-full grid md:grid-cols-4 gap-4">

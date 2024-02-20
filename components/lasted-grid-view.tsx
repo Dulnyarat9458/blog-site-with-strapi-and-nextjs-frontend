@@ -2,26 +2,9 @@ import * as React from "react"
 import Image from "next/image";
 import Link from "next/link";
 
-async function getData() {
 
-  const options: any = {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,
-    },
-  };
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/contents?populate=cover&sort[0]=createdAt:desc&pagination[limit]=12`;
-  const res = await fetch(url, options)
-
-  if (!res.ok) {
-    throw new Error('Failed to fetch data')
-  }
-  return res.json()
-}
-
-export async function LastedGridView() {
-  const contentData = await getData();
-
+export function LastedGridView(props: any) {
+  const contentData = props.contentData;
   return (
     <div className="w-full grid md:grid-cols-4 gap-4">
       {

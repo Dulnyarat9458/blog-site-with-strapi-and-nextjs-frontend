@@ -30,11 +30,11 @@ export function Header() {
     }
   }
 
-
+  const { theme, setTheme } = useTheme()
   const [categories, setCategories] = useState([]);
   const [isSideOpen, setIsSideOpen] = useState(false);
-  const [isMobileDarkMode, setIsMobileDarkmode] = useState(false);
-  const { setTheme } = useTheme()
+  const [isMobileDarkMode, setIsMobileDarkmode] = useState((theme === 'dark'));
+
 
   useEffect(() => {
     const requestOptions: any = {
@@ -53,6 +53,8 @@ export function Header() {
   }, [])
 
   useEffect(() => {
+
+   
     if (isMobileDarkMode) {
       setTheme('dark')
     } else {

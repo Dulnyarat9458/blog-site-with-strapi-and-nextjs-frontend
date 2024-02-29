@@ -28,6 +28,9 @@ interface Content {
 }
 
 async function getLastedData() {
+
+
+
   const options = {
     headers: {
       'Content-Type': 'application/json',
@@ -43,7 +46,10 @@ async function getLastedData() {
   return res.json()
 }
 
-export default async function TagsPage() {
+export default async function TagsPage(props:any) {
+
+  console.log(props)
+  
   const contents = await getLastedData();
   return (
     <div>

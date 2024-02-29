@@ -1,10 +1,34 @@
 "use client"
 
-import { AlignJustify, X } from "lucide-react"
+import { AlignJustify, X, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { DarkModeToggle } from "@/components/darkmode-toggle"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
+import { Separator } from "@/components/ui/separator"
+import { Checkbox } from "@/components/ui/checkbox"
+import { useRouter } from 'next/navigation';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { useForm } from "react-hook-form"
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -21,8 +45,11 @@ import { useEffect, forwardRef, useState } from "react"
 
 import { cn } from "@/lib/utils"
 
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 export function Header() {
+
   interface Category {
     id: number,
     attributes: {
@@ -30,13 +57,49 @@ export function Header() {
     }
   }
 
+  const router = useRouter();
   const { theme, setTheme } = useTheme()
   const [categories, setCategories] = useState([]);
+  const [tags, setTags] = useState([]);
   const [isSideOpen, setIsSideOpen] = useState(false);
   const [isMobileDarkMode, setIsMobileDarkmode] = useState((theme === 'dark'));
+  const [openSearch, setOpenSearch] = useState(false);
 
+  const formSchema = z.object({
+    keyword: z.string(),
+    categories: z.array(z.string()),
+    tags: z.array(z.string()),
+  })
 
-  useEffect(() => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      keyword: "",
+      categories: [],
+      tags: [],
+    },
+  })
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    console.log(values) ;
+    const categoryList = (values.categories).join(',');
+    const tagList = (values.tags).join(',');
+    setOpenSearch(false);
+    router.push(`/contents?keyword=${values.keyword}&category=${categoryList}&tag=${tagList}`);
+  }
+
+  const checkDarkMode = () => {
+    if (isMobileDarkMode) {
+      setTheme('dark')
+    } else {
+      setTheme('light')
+    }
+  }
+
+  const getInitialValue = () => {
+    const urlCategories = `${process.env.NEXT_PUBLIC_API_URL}/api/categories`
+    const urlTag = `${process.env.NEXT_PUBLIC_API_URL}/api/tags`
+
     const requestOptions: any = {
       method: "GET",
       headers: {
@@ -44,31 +107,35 @@ export function Header() {
         'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,
       },
     };
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/api/categories`
-    fetch(url, requestOptions)
+
+    fetch(urlCategories, requestOptions)
       .then(response => response.json())
       .then(data => {
         setCategories(data.data)
       }).catch((error) => console.error(error));
-  }, [])
 
-  useEffect(() => {
-
-   
-    if (isMobileDarkMode) {
-      setTheme('dark')
-    } else {
-      setTheme('light')
-    }
-
-  }, [isMobileDarkMode])
+    fetch(urlTag, requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        setTags(data.data)
+      }).catch((error) => console.error(error));
+  }
 
   const openSidebar = () => {
     setIsSideOpen(true);
   }
+
   const closeSidebar = () => {
     setIsSideOpen(false);
   }
+
+  useEffect(() => {
+    getInitialValue();
+  }, [])
+
+  useEffect(() => {
+    checkDarkMode();
+  }, [isMobileDarkMode])
 
   return (
     <>
@@ -83,12 +150,147 @@ export function Header() {
                 </Button>
               </NavigationMenuItem>
               <NavigationMenuItem className="hidden md:block">
+                <Dialog open={openSearch} onOpenChange={setOpenSearch}>
+                  <DialogTrigger asChild>
+                    <Button className="w-10 p-0" variant="outline"><Search /></Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Search</DialogTitle>
+                      <DialogDescription>
+                        find your target
+                      </DialogDescription>
+                    </DialogHeader>
+                    <Separator orientation="horizontal" />
+                    <Form {...form}>
+                      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                        <FormField
+                          control={form.control}
+                          name="keyword"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Keyword</FormLabel>
+                              <FormControl>
+                                <Input placeholder="keyword..." {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="categories"
+                          render={() => (
+                            <FormItem>
+                              <div className="mb-4">
+                                <FormLabel className="text-base">Categories</FormLabel>
+                              </div>
+                              <div className="grid grid-cols-1 md:grid-cols-2">
+                                {categories.map((category: any) => (
+                                  <FormField
+                                    key={category.attributes.name}
+                                    control={form.control}
+                                    name="categories"
+                                    render={({ field }) => {
+                                      return (
+                                        <FormItem
+                                          key={category.attributes.name}
+                                          className="flex flex-row items-start space-x-3 space-y-0"
+                                        >
+                                          <FormControl>
+                                            <Checkbox
+                                              checked={field.value?.includes(category.attributes.name)}
+                                              onCheckedChange={(checked) => {
+                                                return checked
+                                                  ? field.onChange([...field.value, category.attributes.name])
+                                                  : field.onChange(
+                                                    field.value?.filter(
+                                                      (value) => value !== category.attributes.name
+                                                    )
+                                                  )
+                                              }}
+                                            />
+                                          </FormControl>
+                                          <FormLabel className="text-sm font-normal">
+                                            {category.attributes.name}
+                                          </FormLabel>
+                                        </FormItem>
+                                      )
+                                    }}
+                                  />
+                                ))}
+                              </div>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="tags"
+                          render={() => (
+                            <FormItem>
+                              <div className="mb-4">
+                                <FormLabel className="text-base">Tag</FormLabel>
+                              </div>
+                              <div className="grid grid-cols-1 md:grid-cols-2">
+                                {tags.map((tag: any) => (
+                                  <FormField
+                                    key={tag.attributes.name}
+                                    control={form.control}
+                                    name="tags"
+                                    render={({ field }) => {
+                                      return (
+                                        <FormItem
+                                          key={tag.attributes.name}
+                                          className="flex flex-row items-start space-x-3 space-y-0"
+                                        >
+                                          <FormControl>
+                                            <Checkbox
+                                              checked={field.value?.includes(tag.attributes.name)}
+                                              onCheckedChange={(checked) => {
+                                                return checked
+                                                  ? field.onChange([...field.value, tag.attributes.name])
+                                                  : field.onChange(
+                                                    field.value?.filter(
+                                                      (value) => value !== tag.attributes.name
+                                                    )
+                                                  )
+                                              }}
+                                            />
+                                          </FormControl>
+                                          <FormLabel className="text-sm font-normal">
+                                            {tag.attributes.name}
+                                          </FormLabel>
+                                        </FormItem>
+                                      )
+                                    }}
+                                  />
+                                ))}
+                              </div>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <DialogFooter className="sm:justify-start">
+                          <Button type="submit">Submit</Button>
+                          <DialogClose asChild>
+                            <Button type="button" variant="secondary">
+                              Close
+                            </Button>
+                          </DialogClose>
+                        </DialogFooter>
+                      </form>
+                    </Form>
+                  </DialogContent>
+                </Dialog>
+              </NavigationMenuItem>
+              <NavigationMenuItem className="hidden md:block">
                 <DarkModeToggle />
               </NavigationMenuItem>
               <NavigationMenuItem className="hidden md:block">
                 <NavigationMenuTrigger>Categories</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="w-full">
+                  <ul className="w-full min-w-52">
                     {
                       categories?.map((category: Category, index: number) => {
                         return (
@@ -118,8 +320,8 @@ export function Header() {
               {
                 categories?.map((category: Category, index: number) => {
                   return (
-                    <Link href={`/categories/${category.id}`} onClick={closeSidebar}>
-                      <li className="my-5" key={index}>{category.attributes.name} </li>
+                    <Link key={index} href={`/categories/${category.attributes.name}`} onClick={closeSidebar}>
+                      <li className="my-5" >{category.attributes.name} </li>
                     </Link>
                   );
                 }) || <p>Loading...</p>

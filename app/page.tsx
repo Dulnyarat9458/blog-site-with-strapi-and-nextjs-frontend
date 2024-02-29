@@ -1,5 +1,6 @@
 import { HighlightGridView } from "@/components/highlight-grid-view"
 import { LastedGridView } from "@/components/lasted-grid-view";
+import Link from "next/link";
 
 async function getHighlightData() {
   const options = {
@@ -41,7 +42,10 @@ export default async function Home() {
       <h1 className="text-center mx-auto font-bold text-4xl mt-14 mb-5">HIGHLIGHT</h1>
       <HighlightGridView contentData={highlightData} />
       <div className="my-8"></div>
-      <h1 className="text-center mx-auto font-bold text-4xl mt-14 mb-5">LASTED</h1>
+      <div className="flex justify-between items-center mt-14 mb-4">
+        <h1 className="font-bold text-4xl">LASTED</h1>
+        <Link href='/contents' className="text-lg font-semibold text-primary duration-300 hover:text-xl">MORE</Link>
+      </div>
       <LastedGridView contentData={lastedData} />
     </>
   );

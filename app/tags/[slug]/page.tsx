@@ -32,7 +32,6 @@ interface Content {
   attributes: ContentAttributes;
 }
 
-
 async function getData(slug: string) {
   const options = {
     headers: {

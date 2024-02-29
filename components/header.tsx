@@ -1,14 +1,10 @@
 "use client"
 
-import { useEffect, forwardRef, useState } from "react"
-import Link from "next/link"
-import { DarkModeToggle } from "@/components/darkmode-toggle"
-import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
 import { AlignJustify, X } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { DarkModeToggle } from "@/components/darkmode-toggle"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
-import { useTheme } from "next-themes"
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -16,16 +12,30 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-  NavigationMenuViewport
 } from "@/components/ui/navigation-menu"
+import { useTheme } from "next-themes"
+
+import Link from "next/link"
+
+import { useEffect, forwardRef, useState } from "react"
+
+import { cn } from "@/lib/utils"
+
 
 export function Header() {
+  interface Category {
+    id: number,
+    attributes: {
+      name: string
+    }
+  }
+
+
   const [categories, setCategories] = useState([]);
   const [isSideOpen, setIsSideOpen] = useState(false);
   const [isMobileDarkMode, setIsMobileDarkmode] = useState(false);
   const { setTheme } = useTheme()
-  
+
   useEffect(() => {
     const requestOptions: any = {
       method: "GET",
@@ -78,7 +88,7 @@ export function Header() {
                 <NavigationMenuContent>
                   <ul className="w-full">
                     {
-                      categories?.map((category: any, index: number) => {
+                      categories?.map((category: Category, index: number) => {
                         return (
                           <ListItem key={index} href={`/categories/${category.id}`} title={category.attributes.name} />
                         );
@@ -104,7 +114,7 @@ export function Header() {
           <div className="overflow-y-auto h-[85%]">
             <ul className="w-full overflow-y-auto">
               {
-                categories?.map((category: any, index: number) => {
+                categories?.map((category: Category, index: number) => {
                   return (
                     <Link href={`/categories/${category.id}`} onClick={closeSidebar}>
                       <li className="my-5" key={index}>{category.attributes.name} </li>
@@ -120,7 +130,6 @@ export function Header() {
             </Button>
           </div>
         </div>
-
       </div>
     </>
   )

@@ -1,7 +1,6 @@
 import Image from "next/image";
-import { Metadata, ResolvingMetadata } from 'next'
-import { BlocksRenderer } from '@strapi/blocks-react-renderer';
 import Link from "next/link";
+
 import {
   Card,
   CardContent,
@@ -11,43 +10,55 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-type Props = {
+interface Props {
   params: { slug: string }
   searchParams: { [key: string]: string | string[] | undefined }
 }
 
-async function getData(slug: string) {
+interface ContentAttributes {
+  cover: {
+    data: {
+      attributes: {
+        url: string;
+        alternativeText: string;
+      }
+    }
+  },
+  name: string;
+}
 
-  const options: any = {
+interface Content {
+  id: string;
+  attributes: ContentAttributes;
+}
+
+
+async function getData(slug: string) {
+  const options = {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,
     },
   };
-
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/tags/${slug}?populate[contents][populate][cover]=*`
-  const res: any = await fetch(url, options);
-
+  const res = await fetch(url, options);
   if (!res.ok) {
     throw new Error('That content can’t be found.')
   }
-
   return res.json()
 }
 
 export default async function TagsPage(props: Props) {
   const contents = await getData(props.params.slug);
-
   return (
     <div>
       <div className="mb-12">
-        <h1 className="text-center mx-auto font-bold text-4xl mt-14 mb-5">{contents.data.attributes.name}</h1>
+        <h1 className="text-center mx-auto font-bold text-4xl mt-14 mb-5">Tag: {contents.data.attributes.name}</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {
             contents.data.attributes.contents.data.map(
-              (content: any) => {
+              (content: Content) => {
                 return (
-
                   <Link href={"/contents/" + content.id}>
                     <Card className="h-full">
                       <CardHeader className="p-0">
@@ -68,7 +79,6 @@ export default async function TagsPage(props: Props) {
                       </CardFooter>
                     </Card>
                   </Link>
-
                 )
               }
             )

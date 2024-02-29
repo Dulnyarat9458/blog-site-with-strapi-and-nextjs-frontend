@@ -2,7 +2,7 @@ import { HighlightGridView } from "@/components/highlight-grid-view"
 import { LastedGridView } from "@/components/lasted-grid-view";
 
 async function getHighlightData() {
-  const options: any = {
+  const options = {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,
@@ -18,7 +18,7 @@ async function getHighlightData() {
 }
 
 async function getLastedData() {
-  const options: any = {
+  const options = {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,
@@ -26,7 +26,7 @@ async function getLastedData() {
   };
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/contents?populate=cover&sort[0]=createdAt:desc&pagination[limit]=12`;
   const res = await fetch(url, options)
-  
+
   if (!res.ok) {
     throw new Error('Failed to fetch data')
   }
@@ -36,7 +36,6 @@ async function getLastedData() {
 export default async function Home() {
   const highlightData = await getHighlightData();
   const lastedData = await getLastedData();
-
   return (
     <>
       <h1 className="text-center mx-auto font-bold text-4xl mt-14 mb-5">HIGHLIGHT</h1>

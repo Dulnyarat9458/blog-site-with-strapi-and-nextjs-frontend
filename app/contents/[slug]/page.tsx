@@ -3,11 +3,16 @@ import Link from "next/link";
 import { Metadata, ResolvingMetadata } from 'next'
 import { BlocksRenderer } from '@strapi/blocks-react-renderer';
 
-
-
-type Props = {
+interface Props {
   params: { slug: string }
   searchParams: { [key: string]: string | string[] | undefined }
+}
+
+interface Tag {
+  id: string
+  attributes: {
+    name: string
+  }
 }
 
 export async function generateMetadata(
@@ -15,15 +20,14 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const slug = params.slug
-  const options: any = {
+  const options = {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,
     },
   };
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/contents/${slug}?populate=cover`;
-  const res: any = await fetch(url, options);
-  console.log(url)
+  const res = await fetch(url, options);
   const contents = await res.json();
   return {
     title: contents.data.attributes.name,
@@ -32,7 +36,7 @@ export async function generateMetadata(
 }
 
 async function getData(slug: string) {
-  const options: any = {
+  const options = {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,
@@ -40,7 +44,7 @@ async function getData(slug: string) {
   };
 
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/contents/${slug}?populate[0]=cover&populate[1]=tags`;
-  const res: any = await fetch(url, options);
+  const res = await fetch(url, options);
 
   if (!res.ok) {
     throw new Error('That content can’t be found.')
@@ -48,8 +52,8 @@ async function getData(slug: string) {
   return res.json()
 }
 
-export default async function ContentPage({ params, searchParams }: Props) {
-  const content = await getData(params.slug);
+export default async function ContentPage(props: Props) {
+  const content = await getData(props.params.slug);
 
   return (
     <div>
@@ -73,7 +77,7 @@ export default async function ContentPage({ params, searchParams }: Props) {
       <div className="my-8"></div>
       <div><span>Tag:</span>
         {
-          content.data.attributes.tags.data.map((tag: any) => {
+          content.data.attributes.tags.data.map((tag: Tag) => {
             return (
               <Link href={`/tags/${tag.id}`}>
                 <span className="mx-2 bg-primary text-primary-foreground px-2 py-1 rounded-lg mb-8 duration-200 transition-all">{tag.attributes.name}</span>

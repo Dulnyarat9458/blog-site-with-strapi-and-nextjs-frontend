@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { Anuphan as FontSans } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider"
-import "./globals.css";
-
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+
 import { cn } from "../lib/utils"
+
+import "./globals.css";
+
 
 export const fontSans = FontSans({
   subsets: ["latin"],
@@ -13,12 +15,10 @@ export const fontSans = FontSans({
   weight: ["300", "400", "500", "600", "700"]
 })
 
-
 export const metadata: Metadata = {
   title: "My Site",
   description: "this is my site that get content from strapi",
 };
-
 
 interface RootLayoutProps {
   children: React.ReactNode;

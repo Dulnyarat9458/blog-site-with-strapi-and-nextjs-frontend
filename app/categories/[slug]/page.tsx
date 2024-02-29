@@ -1,7 +1,6 @@
 import Image from "next/image";
-import { Metadata, ResolvingMetadata } from 'next'
-import { BlocksRenderer } from '@strapi/blocks-react-renderer';
 import Link from "next/link";
+
 import {
   Card,
   CardContent,
@@ -11,14 +10,30 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-type Props = {
+interface Props {
   params: { slug: string }
   searchParams: { [key: string]: string | string[] | undefined }
 }
 
-async function getData(slug: string) {
+interface ContentAttributes {
+  cover: {
+    data: {
+      attributes: {
+        url: string;
+        alternativeText: string;
+      }
+    }
+  },
+  name: string;
+}
 
-  const options: any = {
+interface Content {
+  id: String,
+  attributes: ContentAttributes
+}
+
+async function getData(slug: string) {
+  const options = {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,
@@ -26,7 +41,7 @@ async function getData(slug: string) {
   };
 
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/categories/${slug}?populate[contents][populate][cover]=*`
-  const res: any = await fetch(url, options);
+  const res = await fetch(url, options);
 
   if (!res.ok) {
     throw new Error('That content can’t be found.')
@@ -45,7 +60,7 @@ export default async function ContentPage(props: Props) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {
             contents.data.attributes.contents.data.map(
-              (content: any) => {
+              (content: Content) => {
                 return (
                   <Link href={"/contents/" + content.id}>
                     <Card className="h-full border-border ">

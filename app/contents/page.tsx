@@ -41,6 +41,10 @@ async function getLastedData(searchParams: any) {
   const keyword = searchParams.keyword;
   const category = searchParams.category;
   const tag = searchParams.tag;
+  let arrCategory;
+  let arrTag;
+
+
 
   const options = {
     headers: {
@@ -49,16 +53,28 @@ async function getLastedData(searchParams: any) {
     },
   };
 
-
   let url = `${process.env.NEXT_PUBLIC_API_URL}/api/contents?populate=cover`;
 
-  if(keyword || category || tag){
-    url += `&filters`
+  if(keyword){
+    url  += `&filters[name][$contains]=${keyword}`
   }
 
-  // (keyword.isEmpty() || category || tag) ??  url  `?filters` 
+  if (category) {
+    arrCategory = category.split(",");
+    arrCategory.map((id:number,index:number)=>{
+      console.log(id)
+      url += `&filters[categories][id][$in][${index}]=${id}`
+    });
+  
+  }
 
-  keyword ? url = url + `?[name][$contains]=${keyword}` : "";
+  if (tag) {
+    arrTag = tag.split(",");
+    arrTag.map((id:number,index:number)=>{
+      console.log(id)
+      url += `&filters[tags][id][$in][${index}]=${id}`
+    });
+  }
 
   const finalUrl = url + `&sort[0]=createdAt:desc&pagination[limit]=12`;
 
@@ -79,8 +95,6 @@ export default async function TagsPage({ searchParams }: Props) {
   console.log(searchParams)
 
   const contents = await getLastedData(searchParams);
-
-
 
   return (
     <div>

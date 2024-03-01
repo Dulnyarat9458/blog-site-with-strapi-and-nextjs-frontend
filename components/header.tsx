@@ -1,6 +1,6 @@
 "use client"
 
-import { AlignJustify, X, Search } from "lucide-react"
+import { AlignJustify, X, Search , RotateCcw} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { DarkModeToggle } from "@/components/darkmode-toggle"
 import { Switch } from "@/components/ui/switch"
@@ -67,8 +67,8 @@ export function Header() {
 
   const formSchema = z.object({
     keyword: z.string(),
-    categories: z.array(z.string()),
-    tags: z.array(z.string()),
+    categories: z.array(z.number()),
+    tags: z.array(z.number()),
   })
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -79,14 +79,23 @@ export function Header() {
       tags: [],
     },
   })
+  
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values) ;
     const categoryList = (values.categories).join(',');
     const tagList = (values.tags).join(',');
     setOpenSearch(false);
     router.push(`/contents?keyword=${values.keyword}&category=${categoryList}&tag=${tagList}`);
   }
+
+  // const resetForm = () => {
+  //   console.log("toggrglr test")
+  //   resetField("keyword");
+  //   resetField("categories");
+  //   resetField("tags");
+  // }
+  
+
 
   const checkDarkMode = () => {
     if (isMobileDarkMode) {
@@ -120,7 +129,7 @@ export function Header() {
         setTags(data.data)
       }).catch((error) => console.error(error));
   }
-
+  
   const openSidebar = () => {
     setIsSideOpen(true);
   }
@@ -188,24 +197,24 @@ export function Header() {
                               <div className="grid grid-cols-1 md:grid-cols-2">
                                 {categories.map((category: any) => (
                                   <FormField
-                                    key={category.attributes.name}
+                                    key={category.id}
                                     control={form.control}
                                     name="categories"
                                     render={({ field }) => {
                                       return (
                                         <FormItem
-                                          key={category.attributes.name}
+                                          key={category.id}
                                           className="flex flex-row items-start space-x-3 space-y-0"
                                         >
                                           <FormControl>
                                             <Checkbox
-                                              checked={field.value?.includes(category.attributes.name)}
+                                              checked={field.value?.includes(category.id)}
                                               onCheckedChange={(checked) => {
                                                 return checked
-                                                  ? field.onChange([...field.value, category.attributes.name])
+                                                  ? field.onChange([...field.value, category.id])
                                                   : field.onChange(
                                                     field.value?.filter(
-                                                      (value) => value !== category.attributes.name
+                                                      (value) => value !== category.id
                                                     )
                                                   )
                                               }}
@@ -235,24 +244,24 @@ export function Header() {
                               <div className="grid grid-cols-1 md:grid-cols-2">
                                 {tags.map((tag: any) => (
                                   <FormField
-                                    key={tag.attributes.name}
+                                    key={tag.id}
                                     control={form.control}
                                     name="tags"
                                     render={({ field }) => {
                                       return (
                                         <FormItem
-                                          key={tag.attributes.name}
+                                          key={tag.id}
                                           className="flex flex-row items-start space-x-3 space-y-0"
                                         >
                                           <FormControl>
                                             <Checkbox
-                                              checked={field.value?.includes(tag.attributes.name)}
+                                              checked={field.value?.includes(tag.id)}
                                               onCheckedChange={(checked) => {
                                                 return checked
-                                                  ? field.onChange([...field.value, tag.attributes.name])
+                                                  ? field.onChange([...field.value, tag.id])
                                                   : field.onChange(
                                                     field.value?.filter(
-                                                      (value) => value !== tag.attributes.name
+                                                      (value) => value !== tag.id
                                                     )
                                                   )
                                               }}
@@ -271,13 +280,12 @@ export function Header() {
                             </FormItem>
                           )}
                         />
-                        <DialogFooter className="sm:justify-start">
-                          <Button type="submit">Submit</Button>
-                          <DialogClose asChild>
-                            <Button type="button" variant="secondary">
-                              Close
-                            </Button>
-                          </DialogClose>
+                        <div className="flex justify-end items-center">
+                          <Button type="button" className="p-4 rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent text-accent-foreground"><RotateCcw /></Button>
+                        </div>
+                        <Separator orientation="horizontal" />
+                        <DialogFooter className="sm:justify-center">
+                          <Button type="submit" className="w-full">Submit</Button>
                         </DialogFooter>
                       </form>
                     </Form>
@@ -320,8 +328,8 @@ export function Header() {
               {
                 categories?.map((category: Category, index: number) => {
                   return (
-                    <Link key={index} href={`/categories/${category.attributes.name}`} onClick={closeSidebar}>
-                      <li className="my-5" >{category.attributes.name} </li>
+                    <Link key={index} href={`/categories/${category.id}`} onClick={closeSidebar}>
+                      <li className="my-5" >{category.id} </li>
                     </Link>
                   );
                 }) || <p>Loading...</p>

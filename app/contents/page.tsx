@@ -28,11 +28,6 @@ interface Content {
   attributes: ContentAttributes;
 }
 
-interface searchParams {
-  searchParams: { [key: string]: string | string[] | undefined }
-}
-
-
 interface Props {
   searchParams: { [key: string]: string | string[] | undefined }
 }
@@ -92,11 +87,6 @@ export default async function TagsPage({ searchParams }: Props) {
   return (
     <div>
       <div>
-        {/* {searchParams.keyword ? `keyword: ${searchParams.keyword}`:''}
-        <div className="w-2 px-2 inline"></div>
-        {searchParams.category ? `category: ${searchParams.category}`:''}
-        <div className="w-2 px-2 inline"></div>
-        {searchParams.tag ? `tag: ${searchParams.tag}`:''} */}
         <CurrentFilter keyword={searchParams.keyword}  categories={searchParams.category}  tags={searchParams.tag} />
       </div>
       <div className="mb-12">

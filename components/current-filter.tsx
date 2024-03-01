@@ -1,54 +1,8 @@
 "use client"
 
-import { AlignJustify, X, Search, RotateCcw } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { DarkModeToggle } from "@/components/darkmode-toggle"
-import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
-import { Separator } from "@/components/ui/separator"
-import { Checkbox } from "@/components/ui/checkbox"
-import { useRouter } from 'next/navigation';
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { useForm } from "react-hook-form"
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu"
-import { useTheme } from "next-themes"
-
-import Link from "next/link"
-
 import { useEffect, forwardRef, useState } from "react"
 
-import { cn } from "@/lib/utils"
-
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-
-export function CurrentFilter(props:any) {
+export function CurrentFilter(props: any) {
 
   interface Category {
     id: number,
@@ -82,29 +36,19 @@ export function CurrentFilter(props:any) {
       .then(response => response.json())
       .then(data => {
         data.data.map((value: any, index: number) => {
-          arrCat[value.id] = value.attributes.name ;
+          arrCat[value.id] = value.attributes.name;
         })
         setCategories(arrCat)
         console.log(arrCat)
       }).catch((error) => console.error(error));
-
     fetch(urlTag, requestOptions)
       .then(response => response.json())
       .then(data => {
         data.data.map((value: any, index: number) => {
-          arrTag[value.id] = value.attributes.name ;
+          arrTag[value.id] = value.attributes.name;
         })
+        setTags(arrTag)
       }).catch((error) => console.error(error));
-
-
-  }
-
-  const openSidebar = () => {
-    setIsSideOpen(true);
-  }
-
-  const closeSidebar = () => {
-    setIsSideOpen(false);
   }
 
   useEffect(() => {
@@ -116,8 +60,33 @@ export function CurrentFilter(props:any) {
 
   return (
     <>
-    <div className="text-3xl">super test</div>
- 
+      <div>
+        <span className="font-semibold mr-2 text-xl">Keyword:</span>
+        <span className="text-xl">{props.keyword}</span>
+        
+      </div>
+      <div>
+        <span className="font-semibold text-xl">Categories:</span>
+        {
+          categoryList.map((element: number, index: number) => (
+            <div key={index} className="inline ml-2 text-xl">
+              {categories[element]}
+              {index < categoryList.length - 1 && ','}
+            </div>
+          ))
+        }
+      </div>
+      <div>
+        <span className="font-semibold text-xl">Tags:</span>
+        {
+          tagList.map((element: number, index: number) => (
+            <div key={index} className="inline ml-2 text-xl">
+              {tags[element]}
+              {index < tagList.length - 1 && ','}
+            </div>
+          ))
+        }
+      </div>
     </>
   )
 }

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-
+import { Separator } from "@/components/ui/separator"
+import { CurrentFilter } from "@/components/current-filter";
 import {
   Card,
   CardContent,
@@ -44,8 +45,6 @@ async function getLastedData(searchParams: any) {
   let arrCategory;
   let arrTag;
 
-
-
   const options = {
     headers: {
       'Content-Type': 'application/json',
@@ -78,10 +77,6 @@ async function getLastedData(searchParams: any) {
 
   const finalUrl = url + `&sort[0]=createdAt:desc&pagination[limit]=12`;
 
-  console.log("====")
-  console.log(finalUrl);
-  console.log("====")
-
   const res = await fetch(finalUrl, options)
 
   if (!res.ok) {
@@ -92,12 +87,18 @@ async function getLastedData(searchParams: any) {
 
 export default async function TagsPage({ searchParams }: Props) {
 
-  console.log(searchParams)
-
   const contents = await getLastedData(searchParams);
 
   return (
     <div>
+      <div>
+        {/* {searchParams.keyword ? `keyword: ${searchParams.keyword}`:''}
+        <div className="w-2 px-2 inline"></div>
+        {searchParams.category ? `category: ${searchParams.category}`:''}
+        <div className="w-2 px-2 inline"></div>
+        {searchParams.tag ? `tag: ${searchParams.tag}`:''} */}
+        <CurrentFilter keyword={searchParams.keyword}  categories={searchParams.category}  tags={searchParams.tag} />
+      </div>
       <div className="mb-12">
         <h1 className="text-center mx-auto font-bold text-4xl mt-14 mb-5">Contents</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

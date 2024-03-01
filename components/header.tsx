@@ -88,14 +88,12 @@ export function Header() {
     router.push(`/contents?keyword=${values.keyword}&category=${categoryList}&tag=${tagList}`);
   }
 
-  // const resetForm = () => {
-  //   console.log("toggrglr test")
-  //   resetField("keyword");
-  //   resetField("categories");
-  //   resetField("tags");
-  // }
+  const resetForm = () => {
+    form.resetField("keyword");
+    form.resetField("categories");
+    form.resetField("tags");
+  }
   
-
 
   const checkDarkMode = () => {
     if (isMobileDarkMode) {
@@ -108,7 +106,6 @@ export function Header() {
   const getInitialValue = () => {
     const urlCategories = `${process.env.NEXT_PUBLIC_API_URL}/api/categories`
     const urlTag = `${process.env.NEXT_PUBLIC_API_URL}/api/tags`
-
     const requestOptions: any = {
       method: "GET",
       headers: {
@@ -121,6 +118,7 @@ export function Header() {
       .then(response => response.json())
       .then(data => {
         setCategories(data.data)
+        console.log(data.data)
       }).catch((error) => console.error(error));
 
     fetch(urlTag, requestOptions)
@@ -281,7 +279,7 @@ export function Header() {
                           )}
                         />
                         <div className="flex justify-end items-center">
-                          <Button type="button" className="p-4 rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent text-accent-foreground"><RotateCcw /></Button>
+                          <Button type="button" onClick={resetForm} className="p-4 rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent text-accent-foreground"><RotateCcw /></Button>
                         </div>
                         <Separator orientation="horizontal" />
                         <DialogFooter className="sm:justify-center">

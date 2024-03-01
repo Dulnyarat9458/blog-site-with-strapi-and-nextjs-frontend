@@ -27,9 +27,20 @@ interface Content {
   attributes: ContentAttributes;
 }
 
-async function getLastedData() {
+interface searchParams {
+  searchParams: { [key: string]: string | string[] | undefined }
+}
 
 
+interface Props {
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+
+async function getLastedData(searchParams: any) {
+
+  const keyword = searchParams.keyword;
+  const category = searchParams.category;
+  const tag = searchParams.tag;
 
   const options = {
     headers: {
@@ -37,8 +48,25 @@ async function getLastedData() {
       'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,
     },
   };
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/contents?populate=cover&sort[0]=createdAt:desc&pagination[limit]=12`;
-  const res = await fetch(url, options)
+
+
+  let url = `${process.env.NEXT_PUBLIC_API_URL}/api/contents?populate=cover`;
+
+  if(keyword || category || tag){
+    url += `&filters`
+  }
+
+  // (keyword.isEmpty() || category || tag) ??  url  `?filters` 
+
+  keyword ? url = url + `?[name][$contains]=${keyword}` : "";
+
+  const finalUrl = url + `&sort[0]=createdAt:desc&pagination[limit]=12`;
+
+  console.log("====")
+  console.log(finalUrl);
+  console.log("====")
+
+  const res = await fetch(finalUrl, options)
 
   if (!res.ok) {
     throw new Error('Failed to fetch data')
@@ -46,11 +74,14 @@ async function getLastedData() {
   return res.json()
 }
 
-export default async function TagsPage(props:any) {
+export default async function TagsPage({ searchParams }: Props) {
 
-  console.log(props)
-  
-  const contents = await getLastedData();
+  console.log(searchParams)
+
+  const contents = await getLastedData(searchParams);
+
+
+
   return (
     <div>
       <div className="mb-12">

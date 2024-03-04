@@ -1,6 +1,6 @@
 "use client"
 
-import { AlignJustify, X, Search , RotateCcw} from "lucide-react"
+import { AlignJustify, X, Search, RotateCcw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { DarkModeToggle } from "@/components/darkmode-toggle"
 import { Switch } from "@/components/ui/switch"
@@ -62,8 +62,9 @@ export function Header() {
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
   const [isSideOpen, setIsSideOpen] = useState(false);
-  const [isMobileDarkMode, setIsMobileDarkmode] = useState((theme === 'dark'));
   const [openSearch, setOpenSearch] = useState(false);
+
+  const [isMobileDarkMode, setIsMobileDarkmode] = useState(false);
 
   const formSchema = z.object({
     keyword: z.string(),
@@ -79,7 +80,7 @@ export function Header() {
       tags: [],
     },
   })
-  
+
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const categoryList = (values.categories).join(',');
@@ -93,15 +94,7 @@ export function Header() {
     form.resetField("categories");
     form.resetField("tags");
   }
-  
 
-  const checkDarkMode = () => {
-    if (isMobileDarkMode) {
-      setTheme('dark')
-    } else {
-      setTheme('light')
-    }
-  }
 
   const getInitialValue = () => {
     const urlCategories = `${process.env.NEXT_PUBLIC_API_URL}/api/categories`
@@ -127,7 +120,7 @@ export function Header() {
         setTags(data.data)
       }).catch((error) => console.error(error));
   }
-  
+
   const openSidebar = () => {
     setIsSideOpen(true);
   }
@@ -136,13 +129,28 @@ export function Header() {
     setIsSideOpen(false);
   }
 
-  useEffect(() => {
-    getInitialValue();
-  }, [])
+  const checkDarkInit =() =>{
+    if(theme === 'dark'){
+      setIsMobileDarkmode(true);
+    }else{
+      setIsMobileDarkmode(false);
+    }
+  }
+
+  const changeMode = () =>{
+    if(theme === 'dark'){
+      setTheme('light');
+      setIsMobileDarkmode(false);
+    }else{
+      setTheme('dark');
+      setIsMobileDarkmode(true);
+    }
+  }
 
   useEffect(() => {
-    checkDarkMode();
-  }, [isMobileDarkMode])
+    getInitialValue();
+    checkDarkInit();
+  }, [])
 
   return (
     <>
@@ -151,12 +159,7 @@ export function Header() {
           <Link href="/" className="text-2xl font-bold text-foreground">MYSITE</Link>
           <NavigationMenu>
             <NavigationMenuList>
-              <NavigationMenuItem className="block md:hidden">
-                <Button variant="outline" size="icon" onClick={openSidebar}>
-                  <AlignJustify className="absolute h-[1.2rem] w-[1.2rem]" />
-                </Button>
-              </NavigationMenuItem>
-              <NavigationMenuItem className="hidden md:block">
+              <NavigationMenuItem>
                 <Dialog open={openSearch} onOpenChange={setOpenSearch}>
                   <DialogTrigger asChild>
                     <Button className="w-10 p-0" variant="outline"><Search /></Button>
@@ -290,6 +293,11 @@ export function Header() {
                   </DialogContent>
                 </Dialog>
               </NavigationMenuItem>
+              <NavigationMenuItem className="flex md:hidden">
+                <Button variant="outline" size="icon" onClick={openSidebar}>
+                  <AlignJustify className="absolute h-[1.2rem] w-[1.2rem]" />
+                </Button>
+              </NavigationMenuItem>
               <NavigationMenuItem className="hidden md:block">
                 <DarkModeToggle />
               </NavigationMenuItem>
@@ -317,7 +325,7 @@ export function Header() {
             <Switch
               id="dark-mode-switch"
               checked={isMobileDarkMode}
-              onCheckedChange={setIsMobileDarkmode}
+              onCheckedChange={changeMode}
             />
             <Label htmlFor="dark-mode">Dark Mode</Label>
           </div>

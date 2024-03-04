@@ -55,9 +55,17 @@ export function CurrentFilter(props: any) {
   useEffect(() => {
     getInitialValue();
   }, [])
+
+
+  console.log("ggggg")
+  console.log(props.categories)
+  console.log("ggggg")
+
   const keyword = props.keyword;
-  const categoryList = props.categories !== "" ? props.categories.split(',') : [];
-  const tagList = props.tags !== "" ? props.tags.split(',') : [];
+  const categoryList = props.categories !== "" && props.categories !== undefined ? props.categories.split(',') : [];
+  const tagList = props.tags !== "" && props.tags !== undefined ? props.tags.split(',') : [];
+
+
   
   return (
     <>

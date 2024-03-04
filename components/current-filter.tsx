@@ -4,6 +4,10 @@ import { useEffect, forwardRef, useState } from "react"
 
 export function CurrentFilter(props: any) {
 
+  console.log("-------")
+  console.log(props)
+  console.log("-------")
+
   interface Category {
     id: number,
     attributes: {
@@ -14,9 +18,6 @@ export function CurrentFilter(props: any) {
 
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
-  const [isSideOpen, setIsSideOpen] = useState(false);
-
-
 
   const getInitialValue = () => {
     const urlCategories = `${process.env.NEXT_PUBLIC_API_URL}/api/categories`
@@ -54,39 +55,51 @@ export function CurrentFilter(props: any) {
   useEffect(() => {
     getInitialValue();
   }, [])
-
-  const categoryList = (props.categories).split(',');
-  const tagList = (props.tags).split(',');
-
+  const keyword = props.keyword;
+  const categoryList = props.categories !== "" ? props.categories.split(',') : [];
+  const tagList = props.tags !== "" ? props.tags.split(',') : [];
+  
   return (
     <>
-      <div>
-        <span className="font-semibold mr-2 text-xl">Keyword:</span>
-        <span className="text-xl">{props.keyword}</span>
-        
-      </div>
-      <div>
-        <span className="font-semibold text-xl">Categories:</span>
-        {
-          categoryList.map((element: number, index: number) => (
-            <div key={index} className="inline ml-2 text-xl">
-              {categories[element]}
-              {index < categoryList.length - 1 && ','}
-            </div>
-          ))
-        }
-      </div>
-      <div>
-        <span className="font-semibold text-xl">Tags:</span>
-        {
-          tagList.map((element: number, index: number) => (
-            <div key={index} className="inline ml-2 text-xl">
-              {tags[element]}
-              {index < tagList.length - 1 && ','}
-            </div>
-          ))
-        }
-      </div>
+      {
+        keyword && (
+          <div>
+            <span className="font-semibold mr-2 text-xl">Keyword:</span>
+            <span className="text-xl">{props.keyword}</span>
+          </div>
+        )
+      }
+
+      {
+        categoryList.length > 0 && (
+          <div>
+            <span className="font-semibold text-xl">Categories:</span>
+            {
+              categoryList.map((element: number, index: number) => (
+                <div key={index} className="inline ml-2 text-xl">
+                  {categories[element]}
+                  {index < categoryList.length - 1 && ','}
+                </div>
+              ))
+            }
+          </div>
+        )
+      }
+      {
+        tagList.length > 0 && (
+          <div>
+            <span className="font-semibold text-xl">Tags:</span>
+            {
+              tagList.map((element: number, index: number) => (
+                <div key={index} className="inline ml-2 text-xl">
+                  {tags[element]}
+                  {index < tagList.length - 1 && ','}
+                </div>
+              ))
+            }
+          </div>
+        )
+      }
     </>
   )
 }

@@ -11,6 +11,17 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
+import { PaginationMain } from "@/components/pagination";
+
 interface ContentAttributes {
   cover: {
     data: {
@@ -37,6 +48,11 @@ async function getLastedData(searchParams: any) {
   const keyword = searchParams.keyword;
   const category = searchParams.category;
   const tag = searchParams.tag;
+  const paginationPage = searchParams.paginationpage;
+  const pageSize = 4; 
+
+  console.log(searchParams)
+
   let arrCategory;
   let arrTag;
 
@@ -49,33 +65,42 @@ async function getLastedData(searchParams: any) {
 
   let url = `${process.env.NEXT_PUBLIC_API_URL}/api/contents?populate=cover`;
 
-  if(keyword && keyword !== undefined){
-    url  += `&filters[name][$contains]=${keyword}`
+  if (keyword && keyword !== undefined) {
+    url += `&filters[name][$contains]=${keyword}`
   }
 
   if (category && category !== undefined) {
     arrCategory = category.split(",");
-    arrCategory.map((id:number,index:number)=>{
-      console.log(id)
+    arrCategory.map((id: number, index: number) => {
       url += `&filters[categories][id][$in][${index}]=${id}`
     });
-  
+
   }
 
   if (tag && tag !== undefined) {
     arrTag = tag.split(",");
-    arrTag.map((id:number,index:number)=>{
-      console.log(id)
+    arrTag.map((id: number, index: number) => {
       url += `&filters[tags][id][$in][${index}]=${id}`
     });
   }
+  
 
-  const finalUrl = url + `&sort[0]=createdAt:desc&pagination[limit]=12`;
+  url += `&sort[0]=createdAt:desc&pagination[pageSize]=${pageSize}`;
+
+  if(paginationPage && paginationPage !== undefined){
+    url += `&pagination[page]=${paginationPage}`;
+  }else{
+    url += `&pagination[page]=1`;
+  }
+
+  const finalUrl = url;
   const res = await fetch(finalUrl, options)
 
   if (!res.ok) {
     throw new Error('Failed to fetch data')
   }
+
+
   return res.json()
 }
 
@@ -84,11 +109,11 @@ export default async function TagsPage({ searchParams }: Props) {
   return (
     <div>
       <div>
-        <CurrentFilter keyword={searchParams.keyword}  categories={searchParams.category}  tags={searchParams.tag} />
+        <CurrentFilter keyword={searchParams.keyword} categories={searchParams.category} tags={searchParams.tag} />
       </div>
       <div className="mb-12">
         <h1 className="text-center mx-auto font-bold text-4xl mt-14 mb-5">Contents</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 my-16">
           {
             contents.data.map(
               (content: Content) => {
@@ -118,6 +143,10 @@ export default async function TagsPage({ searchParams }: Props) {
             )
           }
         </div>
+        <div className="my-8">
+          {/* <PaginationMain totalPages={totalPages} /> */}
+        </div>
+
       </div>
     </div>
   );

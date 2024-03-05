@@ -48,8 +48,8 @@ async function getLastedData(searchParams: any) {
   const keyword = searchParams.keyword;
   const category = searchParams.category;
   const tag = searchParams.tag;
-  const paginationPage = searchParams.paginationpage;
-  const pageSize = 4; 
+  const currentPage = searchParams.page;
+  const pageSize = 1; 
 
   console.log(searchParams)
 
@@ -87,8 +87,8 @@ async function getLastedData(searchParams: any) {
 
   url += `&sort[0]=createdAt:desc&pagination[pageSize]=${pageSize}`;
 
-  if(paginationPage && paginationPage !== undefined){
-    url += `&pagination[page]=${paginationPage}`;
+  if(currentPage && currentPage !== undefined){
+    url += `&pagination[page]=${currentPage}`;
   }else{
     url += `&pagination[page]=1`;
   }
@@ -106,6 +106,11 @@ async function getLastedData(searchParams: any) {
 
 export default async function TagsPage({ searchParams }: Props) {
   const contents = await getLastedData(searchParams);
+
+  console.log(contents.meta.pagination.page)
+
+  console.log(contents)
+
   return (
     <div>
       <div>
@@ -144,7 +149,7 @@ export default async function TagsPage({ searchParams }: Props) {
           }
         </div>
         <div className="my-8">
-          {/* <PaginationMain totalPages={totalPages} /> */}
+          <PaginationMain paginationValue={contents.meta.pagination} />
         </div>
 
       </div>

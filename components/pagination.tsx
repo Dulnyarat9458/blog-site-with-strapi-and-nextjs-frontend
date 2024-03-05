@@ -1,25 +1,19 @@
 "use client"
 
-
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useDebouncedCallback } from 'use-debounce';
+import { usePathname, useSearchParams } from 'next/navigation';
 
-export function PaginationMain({ totalPages }: { totalPages: number }) {
-
+export function PaginationMain({ paginationValue }: any) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const currentPage = Number(searchParams.get('page')) || 1;
-
   const createPageURL = (pageNumber: number | string) => {
     const params = new URLSearchParams(searchParams);
     params.set('page', pageNumber.toString());
@@ -29,26 +23,35 @@ export function PaginationMain({ totalPages }: { totalPages: number }) {
   return (
     <Pagination>
       <PaginationContent>
-        <PaginationItem>
-          <PaginationPrevious href="#" />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#" isActive>1</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#">
-            2
-          </PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#">3</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationEllipsis />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationNext href="#" />
-        </PaginationItem>
+        {
+          paginationValue.page !== 1 && (
+            <PaginationItem>
+              <PaginationPrevious href={createPageURL(paginationValue.page - 1)} />
+            </PaginationItem>
+          )
+        }
+        {[...Array(paginationValue.pageCount)].map((_, index: number) =>
+          <PaginationItem key={index}>
+            {
+              index + 1 === paginationValue.page ? (
+                <PaginationLink href={createPageURL(index + 1)} isActive>
+                  {index + 1}
+                </PaginationLink>
+              ) : (
+                <PaginationLink href={createPageURL(index + 1)}>
+                  {index + 1}
+                </PaginationLink>
+              )
+            }
+          </PaginationItem>
+        )}
+        {
+          paginationValue.page !== paginationValue.pageCount && (
+            <PaginationItem>
+              <PaginationNext href={createPageURL(paginationValue.page + 1)} />
+            </PaginationItem>
+          )
+        }
       </PaginationContent>
     </Pagination>
   )

@@ -27,9 +27,6 @@ export function PaginationMain({ paginationValue }: any) {
           paginationValue.page !== 1 && (
             <>
               <PaginationItem>
-                <PaginationPrevious href={createPageURL(1)} />
-              </PaginationItem>
-              <PaginationItem>
                 <PaginationPrevious href={createPageURL(paginationValue.page - 1)} />
               </PaginationItem>
             </>

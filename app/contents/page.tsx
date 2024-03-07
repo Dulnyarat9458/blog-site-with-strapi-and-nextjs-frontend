@@ -63,7 +63,7 @@ async function getLastedData(searchParams: any) {
     },
   };
 
-  let url = `${process.env.NEXT_PUBLIC_API_URL}/api/contents?populate=cover`;
+  let url = `${process.env.NEXT_PUBLIC_API_URL}/api/contents?populate=*`;
 
   if (keyword && keyword !== undefined) {
     url += `&filters[name][$contains]=${keyword}`

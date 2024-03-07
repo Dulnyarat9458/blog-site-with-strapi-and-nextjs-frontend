@@ -49,7 +49,7 @@ async function getLastedData(searchParams: any) {
   const category = searchParams.category;
   const tag = searchParams.tag;
   const currentPage = searchParams.page;
-  const pageSize = 1; 
+  const pageSize = 12;
 
   console.log(searchParams)
 
@@ -83,13 +83,13 @@ async function getLastedData(searchParams: any) {
       url += `&filters[tags][id][$in][${index}]=${id}`
     });
   }
-  
+
 
   url += `&sort[0]=createdAt:desc&pagination[pageSize]=${pageSize}`;
 
-  if(currentPage && currentPage !== undefined){
+  if (currentPage && currentPage !== undefined) {
     url += `&pagination[page]=${currentPage}`;
-  }else{
+  } else {
     url += `&pagination[page]=1`;
   }
 
@@ -124,13 +124,13 @@ export default async function TagsPage({ searchParams }: Props) {
               (content: Content) => {
                 return (
                   <Link href={"/contents/" + content.id}>
-                    <Card className="h-full">
+                    <Card className="h-full border-border duration-200 hover:border-primary hover:text-primary">
                       <CardHeader className="p-0">
                         <Image
                           src={process.env.NEXT_PUBLIC_API_URL + "" + content.attributes.cover.data.attributes.url}
                           layout="responsive"
                           alt={content.attributes.cover.data.attributes.alternativeText}
-                          className="w-full aspect-square object-cover rounded-t"
+                          className="w-full aspect-square object-cover rounded-t-lg"
                           width={1200}
                           height={1200}
                         />

@@ -63,7 +63,7 @@ export default async function ContentPage(props: Props) {
               (content: Content) => {
                 return (
                   <Link href={"/contents/" + content.id}>
-                    <Card className="h-full border-border ">
+                    <Card className="h-full border-border duration-200 hover:border-primary hover:text-primary">
                       <CardHeader className="p-0">
                         <Image
                           src={process.env.NEXT_PUBLIC_API_URL + "" + content.attributes.cover.data.attributes.url}

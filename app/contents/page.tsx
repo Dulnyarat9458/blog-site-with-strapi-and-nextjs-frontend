@@ -51,8 +51,6 @@ async function getLastedData(searchParams: any) {
   const currentPage = searchParams.page;
   const pageSize = 12;
 
-  console.log(searchParams)
-
   let arrCategory;
   let arrTag;
 

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Metadata, ResolvingMetadata } from 'next'
 import { BlocksRenderer } from '@strapi/blocks-react-renderer';
+import RelatedCarousel from "@/components/related-carousel";
 
 interface Props {
   params: { slug: string }
@@ -43,7 +44,7 @@ async function getData(slug: string) {
     },
   };
 
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/contents/${slug}?populate[0]=cover&populate[1]=tags`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/contents/${slug}?populate[0]=cover&populate[1]=tags&populate[2]=categories`;
   const res = await fetch(url, options);
 
   if (!res.ok) {
@@ -54,6 +55,17 @@ async function getData(slug: string) {
 
 export default async function ContentPage(props: Props) {
   const content = await getData(props.params.slug);
+  const categories = content.data.attributes.categories.data ;
+  const tags = content.data.attributes.tags.data ;
+  const categoriesListId:any = [];
+  const tagsListId:any = [];
+
+  categories.map((value:any)=>{
+    categoriesListId.push(value.id)
+  })
+  tags.map((value:any)=>{
+    tagsListId.push(value.id)
+  })
 
   return (
     <div>
@@ -86,6 +98,7 @@ export default async function ContentPage(props: Props) {
           })
         }
       </div>
+      <RelatedCarousel categoriesId={categoriesListId}  tagsId={tagsListId} />
     </div>
   );
 }

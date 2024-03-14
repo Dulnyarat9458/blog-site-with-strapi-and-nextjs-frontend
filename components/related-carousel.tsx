@@ -1,6 +1,10 @@
-import * as React from "react"
+"use client"
 
+import * as React from "react"
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import Image from "next/image";
+import Link from "next/link";
 import {
   Carousel,
   CarouselContent,
@@ -8,67 +12,49 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import { Link } from "lucide-react";
 
 
 
-async function getData(tagsId:any,categoriesId:any) {
-
-  let arrCategory;
-  let arrTag;
-
-  const options = {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,
-    },
-  };
-
-  let url = `${process.env.NEXT_PUBLIC_API_URL}/api/contents?populate=*`;
-
-  console.log("=====")
-  // console.log(categoriesId)
-  console.log(tagsId)
-  console.log("=====")
-  
-  // if (categoriesId && categoriesId !== undefined) {
-
-  //   categoriesId.map((id: number, index: number) => {
-  //     url += `&filters[categories][id][$in][${index}]=${id}`
-  //   });
-
-  // }
-
-  // if (tagsId && tagsId !== undefined) {
-  //   // arrTag = tagsId.split(",");
-  //   tagsId.map((id: number, index: number) => {
-  //     url += `&filters[tags][id][$in][${index}]=${id}`
-  //   });
-  // }
 
 
-  url += `&sort[0]=createdAt:desc`;
+export default function RelatedCarousel(props: any) {
 
-  const finalUrl = url;
-  const res = await fetch(finalUrl, options)
+  const [Contents, setContents]: any = useState({});
 
-  console.log(finalUrl)
+  function fetchData(tagsId: any, categoriesId: any) {
 
-  if (!res.ok) {
-    throw new Error('That content can’t be found.')
+
+    const options = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,
+      },
+    };
+
+    let url = `${process.env.NEXT_PUBLIC_API_URL}/api/contents?populate=*`;
+
+    url += `&sort[0]=createdAt:desc`;
+
+    const finalUrl = url;
+    fetch(finalUrl, options)
+      .then(res => res.json())
+      .then(data => {
+        setContents(data);
+      }).catch((error) => console.error(error));
+
+
   }
-  return res.json()
-}
 
-export default async function RelatedCarousel(props:any)  {
-  console.log(props.tagsId)
-  console.log(props.categoriesId)
+  useEffect(() => {
+    fetchData(props.tagsId, props.categoriesId)
+  }, [])
 
-  const contents = await getData(props.tagsId,props.categoriesId);
 
-  console.log("==")
+
+  const contents = Contents.data;
+  console.log("contents")
   console.log(contents)
-  console.log("==")
+  console.log("contents")
 
   return (
     <>
@@ -79,46 +65,30 @@ export default async function RelatedCarousel(props:any)  {
         }}
         className="w-full relative my-12 mx-auto"
       >
-        <CarouselContent>
-          {contents.data.map((content:any, index:any) => (
-            // <CarouselItem key={index} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/4 xl:basis-1/5">
-            //   <div className="p-1">
-            //     <Card>
-            //       <CardContent className="flex aspect-square items-center justify-center p-6">
-            //         <span className="text-3xl font-semibold">{index + 1}</span>
-            //       </CardContent>
-            //     </Card>
-            //   </div>
-            // </CarouselItem>
+        <CarouselContent className="-ml-4">
+          {contents?.map((content: any, index: any) => (
 
-            <Link href={"/contents/" + content.id}>
-              <Card className="h-full border-border duration-200 hover:border-primary hover:text-primary">
-                <CardHeader className="p-0">
-                  {/* <Image
+            <CarouselItem key={index} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6">
+              <Link className="w-96" href={"/contents/" + content.id}>
+                <div className="overflow-hidden object-cover object-center h-full w-full p-1">
+                  <Image
                     src={process.env.NEXT_PUBLIC_API_URL + "" + content.attributes.cover.data.attributes.url}
-                    layout="responsive"
-                    alt={content.attributes.cover.data.attributes.alternativeText}
-                    className="w-full aspect-square object-cover rounded-t-lg"
                     width={1200}
                     height={1200}
-                  /> */}
-                </CardHeader>
-                <CardContent className="p-4">
-                  <CardTitle className="text-xl">{content.attributes.name}</CardTitle>
-                  <CardDescription></CardDescription>
-                </CardContent>
-                <CardFooter>
-                </CardFooter>
-              </Card>
-          </Link>
+                    alt={content.attributes.cover.data.attributes.alternativeText}
+                    className="transition group-hover:scale-110 object-cover object-center h-full w-full duration-300"
+                  />
+                </div>
+              </Link>
+            </CarouselItem>
+
           ))}
 
-          
+
         </CarouselContent>
         <CarouselPrevious className="left-[-16px] w-10 h-10 shadow-md text-primary" />
         <CarouselNext className="right-[-16px] w-10 h-10 shadow-md text-primary" />
       </Carousel>
     </>
-
   )
 }

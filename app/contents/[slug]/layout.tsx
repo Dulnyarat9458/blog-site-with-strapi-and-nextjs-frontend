@@ -1,3 +1,4 @@
+import CurrentDirectory from "@/components/current-directory";
 import { Fira_Code as FontSans } from "next/font/google";
 
 export const fontSans = FontSans({

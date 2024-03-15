@@ -335,7 +335,7 @@ export function Header() {
                 categories?.map((category: Category, index: number) => {
                   return (
                     <Link key={index} href={`/categories/${category.id}`} onClick={closeSidebar}>
-                      <li className="my-5" >{category.id} </li>
+                      <li className="my-5" >{category.attributes.name} </li>
                     </Link>
                   );
                 }) || <p>Loading...</p>

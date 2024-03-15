@@ -97,17 +97,11 @@ async function getLastedData(searchParams: any) {
   if (!res.ok) {
     throw new Error('Failed to fetch data')
   }
-
-
   return res.json()
 }
 
 export default async function TagsPage({ searchParams }: Props) {
   const contents = await getLastedData(searchParams);
-
-  console.log(contents.meta.pagination.page)
-
-  console.log(contents)
 
   return (
     <div>
@@ -116,40 +110,43 @@ export default async function TagsPage({ searchParams }: Props) {
       </div>
       <div className="mb-12">
         <h1 className="text-center mx-auto font-bold text-4xl mt-14 mb-5">Contents</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 my-16">
-          {
-            contents.data.map(
-              (content: Content) => {
-                return (
-                  <Link href={"/contents/" + content.id}>
-                    <Card className="h-full border-border duration-200 hover:border-primary hover:text-primary">
-                      <CardHeader className="p-0">
-                        <Image
-                          src={process.env.NEXT_PUBLIC_API_URL + "" + content.attributes.cover.data.attributes.url}
-                          layout="responsive"
-                          alt={content.attributes.cover.data.attributes.alternativeText}
-                          className="w-full aspect-square object-cover rounded-t-lg"
-                          width={1200}
-                          height={1200}
-                        />
-                      </CardHeader>
-                      <CardContent className="p-4">
-                        <CardTitle className="text-xl">{content.attributes.name}</CardTitle>
-                        <CardDescription></CardDescription>
-                      </CardContent>
-                      <CardFooter>
-                      </CardFooter>
-                    </Card>
-                  </Link>
-                )
-              }
-            )
-          }
-        </div>
+        {
+          contents.data.length !== 0 ? (<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 my-16">
+            {
+              contents.data.map(
+                (content: Content) => {
+                  return (
+                    <Link href={"/contents/" + content.id}>
+                      <Card className="h-full border-border duration-200 hover:border-primary hover:text-primary">
+                        <CardHeader className="p-0">
+                          <Image
+                            src={process.env.NEXT_PUBLIC_API_URL + "" + content.attributes.cover.data.attributes.url}
+                            layout="responsive"
+                            alt={content.attributes.cover.data.attributes.alternativeText}
+                            className="w-full aspect-square object-cover rounded-t-lg"
+                            width={1200}
+                            height={1200}
+                          />
+                        </CardHeader>
+                        <CardContent className="p-4">
+                          <CardTitle className="text-xl">{content.attributes.name}</CardTitle>
+                          <CardDescription></CardDescription>
+                        </CardContent>
+                        <CardFooter>
+                        </CardFooter>
+                      </Card>
+                    </Link>
+                  )
+                }
+              )
+            }
+          </div>) : (<div className="flex justify-center items-center h-28">Sorry, but nothing matched your filter. Please try again with some different keywords.</div>)
+        }
+
+
         <div className="my-8">
           <PaginationMain paginationValue={contents.meta.pagination} />
         </div>
-
       </div>
     </div>
   );

@@ -98,7 +98,7 @@ export default async function ContentPage(props: Props) {
           })
         }
       </div>
-      <RelatedCarousel categoriesId={categoriesListId}  tagsId={tagsListId} />
+      <RelatedCarousel categoriesId={categoriesListId}  tagsId={tagsListId} cid={props.params.slug} />
     </div>
   );
 }

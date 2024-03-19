@@ -31,6 +31,7 @@ interface ContentAttributes {
       }
     }
   },
+  categories: any,
   name: string;
 }
 
@@ -103,6 +104,8 @@ async function getLastedData(searchParams: any) {
 export default async function TagsPage({ searchParams }: Props) {
   const contents = await getLastedData(searchParams);
 
+  console.log(contents.data)
+
   return (
     <div>
       <div>
@@ -128,8 +131,14 @@ export default async function TagsPage({ searchParams }: Props) {
                             height={1200}
                           />
                         </CardHeader>
-                        <CardContent className="p-4">
-                          <CardTitle className="text-xl">{content.attributes.name}</CardTitle>
+                        <CardContent className="p-4 whitespace-nowrap truncate ">
+                          <CardTitle className="text-xl mb-1">{content.attributes.name}</CardTitle>
+
+                          {
+                            content.attributes.categories.data.map((category: any, index: number) => (
+                              <div className="inline mr-2 whitespace-nowrap truncate">{category.attributes.name}{content.attributes.categories.data.length - 1 === index ? "" : ", "}</div>
+                            ))
+                          }
                           <CardDescription></CardDescription>
                         </CardContent>
                         <CardFooter>

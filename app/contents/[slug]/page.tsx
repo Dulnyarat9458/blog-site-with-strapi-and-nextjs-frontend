@@ -60,6 +60,16 @@ export default async function ContentPage(props: Props) {
   const tags = content.data.attributes.tags.data;
   const categoriesListId: any = [];
   const tagsListId: any = [];
+  const publishedAt = new Date(content.data.attributes.publishedAt);
+  const formattedDate = new Intl.DateTimeFormat('en-GB', {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZoneName: 'short',
+    hour12: false
+  }).format(publishedAt);
 
   categories.map((value: any) => {
     categoriesListId.push(value.id)
@@ -70,8 +80,9 @@ export default async function ContentPage(props: Props) {
 
   return (
     <>
-      <CurrentDirectory title={content.data.attributes.name}/>
+      <CurrentDirectory title={content.data.attributes.name} />
       <div>
+        <div className="mx-auto my-4 px-5 text-sm text-secondary-foreground">Published: {formattedDate}</div>
         <div className="mb-12">
           <h1 className="text-center mx-auto font-bold text-4xl mt-14 mb-5">{content.data.attributes.name}</h1>
         </div>

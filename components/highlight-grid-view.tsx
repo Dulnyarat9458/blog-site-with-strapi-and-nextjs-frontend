@@ -58,6 +58,9 @@ export function HighlightGridView(props: HighlightGridViewProps) {
               from-black/70 from-20% via-black/30 via-70% to-black/0 transition-all hover:bg-black/50 ">
                 <div className="text-white duration-300 transition-all absolute bottom-8 group-hover:bottom-1/2 group-hover:translate-y-1/2 group-hover:text-primary">
                   {ctn.attributes.content.data.attributes.name}
+                  {
+                    
+                  }
                 </div>
               </div>
             </Link>

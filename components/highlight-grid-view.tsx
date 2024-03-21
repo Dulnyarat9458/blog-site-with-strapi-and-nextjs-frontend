@@ -58,7 +58,7 @@ export function HighlightGridView(props: HighlightGridViewProps) {
                 className="duration-300 w-full h-full flex justify-center items-end absolute bottom-0 text-center text-xl font-semibold p-4 
                 bg-gradient-to-t
               from-black/70 from-20% via-black/30 via-70% to-black/0 transition-all hover:bg-black/50 ">
-                <div className="text-white duration-300 transition-all absolute bottom-8 group-hover:bottom-1/2 group-hover:translate-y-1/2 group-hover:text-primary">
+                <div className="text-white duration-300 transition-all absolute bottom-8 group-hover:bottom-1/2 group-hover:translate-y-1/2 group-hover:text-primary p-1">
                   "{ctn.attributes.content.data.attributes.name}"
                   {
                     <div className="whitespace-nowrap truncate">

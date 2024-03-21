@@ -39,11 +39,11 @@ export default async function Home() {
   const lastedData = await getLastedData();
   return (
     <>
-      <h1 className="text-center mx-auto font-bold text-4xl mt-14 mb-5">HIGHLIGHT</h1>
+      <h2 className="text-center mx-auto font-bold text-4xl mt-14 mb-5">HIGHLIGHT</h2>
       <HighlightGridView contentData={highlightData} />
       <div className="my-8"></div>
       <div className="flex justify-between items-center mt-14 mb-4">
-        <h1 className="font-bold text-4xl">LASTED</h1>
+        <h2 className="font-bold text-4xl">LASTED</h2>
         <Link href='/contents' className="text-lg font-semibold text-primary duration-300 hover:text-xl">MORE</Link>
       </div>
       <LastedGridView contentData={lastedData} />

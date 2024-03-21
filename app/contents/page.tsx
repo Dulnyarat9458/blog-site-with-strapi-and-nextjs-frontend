@@ -120,18 +120,18 @@ export default async function TagsPage({ searchParams }: Props) {
                 (content: Content) => {
                   return (
                     <Link href={"/contents/" + content.id}>
-                      <Card className="h-full border-border duration-200 hover:border-primary hover:text-primary">
+                      <Card className="h-full border-border duration-200 hover:border-primary hover:text-primary group ">
                         <CardHeader className="p-0">
                           <Image
                             src={process.env.NEXT_PUBLIC_API_URL + "" + content.attributes.cover.data.attributes.url}
                             layout="responsive"
                             alt={content.attributes.cover.data.attributes.alternativeText}
-                            className="w-full aspect-square object-cover rounded-t-lg"
+                            className="w-full aspect-square object-cover rounded-t-lg duration-300 transition"
                             width={1200}
                             height={1200}
                           />
                         </CardHeader>
-                        <CardContent className="p-4 whitespace-nowrap truncate ">
+                        <CardContent className="p-4 ">
                           <CardTitle className="text-xl mb-1">{content.attributes.name}</CardTitle>
 
                           {

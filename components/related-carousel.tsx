@@ -17,7 +17,7 @@ export default function RelatedCarousel(props: any) {
 
   const [Contents, setContents]: any = useState({});
 
-  function fetchData(tagsId: any, categoriesId: any, cid:number) {
+  function fetchData(tagsId: any, categoriesId: any, cid: number) {
 
     const options = {
       headers: {
@@ -33,13 +33,13 @@ export default function RelatedCarousel(props: any) {
         url += `&filters[$or][0][categories][$or][${index}][id][$eq]=${id}`
       });
     }
-  
+
     if (tagsId && tagsId !== undefined) {
       tagsId.map((id: number, index: number) => {
         url += `&filters[$or][1][tags][$or][${index}][id][$eq]=${id}`
       });
     }
-    
+
     url += `&filters[id][$ne]=${cid}&pagination[limit]=10&sort[0]=createdAt:desc`;
 
     const finalUrl = url;
@@ -47,20 +47,20 @@ export default function RelatedCarousel(props: any) {
     fetch(finalUrl, options)
       .then(res => res.json())
       .then(data => {
-        if(data.data.length !== 0 ){
+        if (data.data.length !== 0) {
           setContents(data);
-        }else{
+        } else {
           let allContentUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/contents?populate=*&filters[id][$ne]=${cid}&pagination[limit]=10&sort[0]=createdAt:desc`;
           fetch(allContentUrl, options)
-          .then(res => res.json())
-          .then(data => {
+            .then(res => res.json())
+            .then(data => {
               setContents(data);
-          }).catch((error) => console.error(error));
+            }).catch((error) => console.error(error));
         }
       }).catch((error) => console.error(error));
   }
 
-  useEffect(() => fetchData(props.tagsId, props.categoriesId,props.cid), [])
+  useEffect(() => fetchData(props.tagsId, props.categoriesId, props.cid), [])
 
   return (
     <div className="my-12">
@@ -90,7 +90,13 @@ export default function RelatedCarousel(props: any) {
                   className="duration-300  w-[calc(100%_-_16px)]  h-full flex justify-center items-end absolute bottom-0 text-center font-semibold
                   bg-gradient-to-t from-black/70 from-20% via-black/30 via-70% to-black/0 transition-all hover:bg-black/50 ">
                   <div className="text-white duration-300 transition-all absolute bottom-8 group-hover:bottom-1/2 group-hover:translate-y-1/2 group-hover:text-primary">
-                    {content.attributes.name}
+                    "{content.attributes.name}"
+                    <div className="whitespace-nowrap truncate">
+                      {content.attributes.categories.data.map((category: any, index: number) => (
+                        <div className="inline text-sm mr-2 whitespace-nowrap truncate">{category.attributes.name}{content.attributes.categories.data.length - 1 === index ? "" : ", "}</div>
+                      ))
+                      }
+                    </div>
                   </div>
                 </div>
               </Link>

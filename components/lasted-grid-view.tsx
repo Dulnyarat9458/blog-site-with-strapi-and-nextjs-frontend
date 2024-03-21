@@ -11,6 +11,7 @@ interface ContentAttribute {
       };
     };
   };
+  categories: any;
   name: string;
 }
 
@@ -30,7 +31,7 @@ interface LastedGridViewProps {
 export function LastedGridView(props: LastedGridViewProps) {
   const { contentData } = props;
   return (
-    <div className="w-full grid md:grid-cols-4 gap-4">
+    <div className="w-full grid md:grid-cols-2 lg:grid-cols-4 gap-4">
       {contentData.data.map((content: Content, index: number) => (
         <div key={index} className="relative aspect-square">
           <Link href={`/contents/${content.id}`} className="group cursor-pointer">
@@ -48,7 +49,15 @@ export function LastedGridView(props: LastedGridViewProps) {
               bg-gradient-to-t from-black/70 from-20% via-black/30 via-70% to-black/0 transition-all hover:bg-black/50"
             >
               <div className="text-white duration-300 transition-all absolute bottom-8 group-hover:bottom-1/2 group-hover:translate-y-1/2 group-hover:text-primary">
-                {content.attributes.name}
+                "{content.attributes.name}"
+                {
+                  <div className='whitespace-nowrap truncate'>
+                    {content.attributes.categories.data.map((category: any, index: number) => (
+                      <div className="inline text-sm mr-2 whitespace-nowrap truncate">{category.attributes.name}{content.attributes.categories.data.length - 1 === index ? "" : ", "}</div>
+                    ))
+                    }
+                  </div>
+                }
               </div>
             </div>
           </Link>

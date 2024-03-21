@@ -9,7 +9,7 @@ async function getHighlightData() {
       'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,
     },
   };
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/highlights?populate[content][populate][cover]=cover&sort[0]=createdAt:desc&pagination[limit]=5`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/highlights?populate[content][populate]=*&sort[0]=createdAt:desc&pagination[limit]=5`;
   const res = await fetch(url, options)
 
   if (!res.ok) {
@@ -25,7 +25,7 @@ async function getLastedData() {
       'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,
     },
   };
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/contents?populate=cover&sort[0]=createdAt:desc&pagination[limit]=12`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/contents?populate=*&sort[0]=createdAt:desc&pagination[limit]=12`;
   const res = await fetch(url, options)
 
   if (!res.ok) {

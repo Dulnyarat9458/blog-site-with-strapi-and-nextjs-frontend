@@ -129,19 +129,19 @@ export function Header() {
     setIsSideOpen(false);
   }
 
-  const checkDarkInit =() =>{
-    if(theme === 'dark'){
+  const checkDarkInit = () => {
+    if (theme === 'dark') {
       setIsMobileDarkmode(true);
-    }else{
+    } else {
       setIsMobileDarkmode(false);
     }
   }
 
-  const changeMode = () =>{
-    if(theme === 'dark'){
+  const changeMode = () => {
+    if (theme === 'dark') {
       setTheme('light');
       setIsMobileDarkmode(false);
-    }else{
+    } else {
       setTheme('dark');
       setIsMobileDarkmode(true);
     }

@@ -61,7 +61,7 @@ export function HighlightGridView(props: HighlightGridViewProps) {
                 <div className="text-white duration-300 transition-all absolute bottom-8 group-hover:bottom-1/2 group-hover:translate-y-1/2 group-hover:text-primary p-1">
                   "{ctn.attributes.content.data.attributes.name}"
                   {
-                    <div className="whitespace-nowrap truncate">
+                    <div className="whitespace-nowrap truncate opacity-0 group-hover:opacity-100 duration-200 text-primary">
                       {ctn.attributes.content.data.attributes.categories.data.map((category: any, index: number) => (
                         <div className="inline text-sm mr-2 whitespace-nowrap truncate">{category.attributes.name}{ctn.attributes.content.data.attributes.categories.data.length - 1 === index ? "" : ", "}</div>
                       ))

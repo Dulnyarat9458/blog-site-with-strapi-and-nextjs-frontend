@@ -103,9 +103,6 @@ async function getLastedData(searchParams: any) {
 
 export default async function TagsPage({ searchParams }: Props) {
   const contents = await getLastedData(searchParams);
-
-  console.log(contents.data)
-
   return (
     <div>
       <div>
@@ -120,29 +117,30 @@ export default async function TagsPage({ searchParams }: Props) {
                 (content: Content) => {
                   return (
                     <Link href={"/contents/" + content.id}>
-                      <Card className="h-full border-border duration-200 hover:border-primary hover:text-primary group ">
+                      <Card className="h-full border-border duration-200 hover:border-primary hover:text-primary group flex flex-col">
                         <CardHeader className="p-0">
-                          <Image
-                            src={process.env.NEXT_PUBLIC_API_URL + "" + content.attributes.cover.data.attributes.url}
-                            layout="responsive"
-                            alt={content.attributes.cover.data.attributes.alternativeText}
-                            className="w-full aspect-square object-cover rounded-t-lg duration-300 transition"
-                            width={1200}
-                            height={1200}
-                          />
-                        </CardHeader>
-                        <CardContent className="p-4 ">
-                          <CardTitle className="text-xl mb-1">{content.attributes.name}</CardTitle>
+                          <div className="aspect-square w-full h-auto overflow-hidden rounded-t-lg">
+                            <Image
+                              src={process.env.NEXT_PUBLIC_API_URL + "" + content.attributes.cover.data.attributes.url}
+                              layout="responsive"
+                              alt={content.attributes.cover.data.attributes.alternativeText}
+                              className="w-full aspect-square object-cover rounded-t-lg duration-300 transition group-hover:scale-110"
+                              width={1200}
+                              height={1200}
+                            />
+                          </div>
 
+                        </CardHeader>
+                        <CardContent className="px-4 pt-4 pb-6 flex-1 relative">
+                          <CardTitle className="text-xl mb-1">{content.attributes.name}</CardTitle>
                           {
                             content.attributes.categories.data.map((category: any, index: number) => (
                               <div className="inline mr-2 whitespace-nowrap truncate">{category.attributes.name}{content.attributes.categories.data.length - 1 === index ? "" : ", "}</div>
                             ))
                           }
-                          <CardDescription></CardDescription>
+                          <div className="mt-2 bottom-0 h-2 z-40"></div>
+                          <div className="h-1 w-0 group-hover:w-[calc(100%-32px)] bg-primary duration-300 absolute bottom-4"></div>
                         </CardContent>
-                        <CardFooter>
-                        </CardFooter>
                       </Card>
                     </Link>
                   )
@@ -151,8 +149,6 @@ export default async function TagsPage({ searchParams }: Props) {
             }
           </div>) : (<div className="flex justify-center items-center h-28">Sorry, but nothing matched your filter. Please try again with some different keywords.</div>)
         }
-
-
         <div className="my-8">
           <PaginationMain paginationValue={contents.meta.pagination} />
         </div>

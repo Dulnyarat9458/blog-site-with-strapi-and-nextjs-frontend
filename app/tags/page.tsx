@@ -55,17 +55,17 @@ export default async function TagsListPage() {
       <div className="mb-12">
         <h1 className="text-center mx-auto font-bold text-4xl mt-14 mb-16">Tag</h1>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {
-              contents.data.map(
-                (content: Content) => {
-                  return (
-                        <Link href={"/tags/" + content.id} className="text-center mx-2 bg-primary text-primary-foreground px-2 py-1 rounded-lg mb-8 duration-200 transition-all">
-                          {content.attributes.name}
-                        </Link>
-                  )
-                }
-              )
-            }            
+          {
+            contents.data.map(
+              (content: Content) => {
+                return (
+                  <Link href={"/tags/" + content.id} className="text-center mx-2 bg-primary text-primary-foreground px-2 py-1 rounded-lg mb-8 duration-200 transition-all">
+                    {content.attributes.name}
+                  </Link>
+                )
+              }
+            )
+          }
         </div>
       </div>
     </div>

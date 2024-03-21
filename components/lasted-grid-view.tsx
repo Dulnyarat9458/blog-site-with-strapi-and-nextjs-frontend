@@ -51,7 +51,7 @@ export function LastedGridView(props: LastedGridViewProps) {
               <div className="p-1 text-white duration-300 transition-all absolute bottom-8 group-hover:bottom-1/2 group-hover:translate-y-1/2 group-hover:text-primary">
                 "{content.attributes.name}"
                 {
-                  <div className='whitespace-nowrap truncate'>
+                  <div className='whitespace-nowrap truncate opacity-0 group-hover:opacity-100 duration-200 text-primary'>
                     {content.attributes.categories.data.map((category: any, index: number) => (
                       <div className="inline text-sm mr-2 whitespace-nowrap truncate">{category.attributes.name}{content.attributes.categories.data.length - 1 === index ? "" : ", "}</div>
                     ))

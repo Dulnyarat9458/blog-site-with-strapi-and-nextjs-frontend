@@ -156,7 +156,7 @@ export function Header() {
     <>
       <nav className="sticky top-0 z-50 py-2 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ">
         <div className="container mx-auto flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold text-foreground">MYSITE</Link>
+          <Link href="/" className="text-2xl font-bold text-foreground">FOODVIEW</Link>
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>

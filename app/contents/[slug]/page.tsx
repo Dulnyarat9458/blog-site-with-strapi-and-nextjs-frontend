@@ -95,14 +95,14 @@ export default async function ContentPage(props: Props) {
             content.data.attributes.tags.data.map((tag: Tag) => {
               return (
                 <Link href={`/tags/${tag.id}`}>
-                  <span className="mx-2 bg-primary text-primary-foreground px-2 py-1 rounded-lg mb-8 duration-200 transition-all">{tag.attributes.name}</span>
+                  <span className="mx-2 bg-primary text-primary-foreground px-2 py-1 rounded-lg mb-8 duration-200 transition-all hover:text-black">{tag.attributes.name}</span>
                 </Link>
               )
             })
           }
         </div>
         <RelatedCarousel categoriesId={categoriesListId} tagsId={tagsListId} cid={props.params.slug} />
-      </div></>
-
+      </div>
+    </>
   );
 }

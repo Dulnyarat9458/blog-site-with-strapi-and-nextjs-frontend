@@ -15,10 +15,16 @@ import { Separator } from "@/components/ui/separator";
 
 export default function RelatedCarousel(props: any) {
 
+  interface Content {
+    data: Array<{
+      id: number;
+      attributes: any;
+    }>
+  }
+
   const [Contents, setContents]: any = useState({});
 
-  function fetchData(tagsId: any, categoriesId: any, cid: number) {
-
+  function fetchData(tagsId: number[], categoriesId: number[], cid: number) {
     const options = {
       headers: {
         'Content-Type': 'application/json',
@@ -62,6 +68,8 @@ export default function RelatedCarousel(props: any) {
 
   useEffect(() => fetchData(props.tagsId, props.categoriesId, props.cid), [])
 
+  console.log(Contents)
+
   return (
     <div className="my-12">
       <Separator />
@@ -91,9 +99,9 @@ export default function RelatedCarousel(props: any) {
                   bg-gradient-to-t from-black/70 from-20% via-black/30 via-70% to-black/0 transition-all hover:bg-black/50 ">
                   <div className="p-1 text-white duration-300 transition-all absolute bottom-4 group-hover:bottom-1/2 group-hover:translate-y-1/2 group-hover:text-primary">
                     "{content.attributes.name}"
-                    <div className="whitespace-nowrap truncate  opacity-0 group-hover:opacity-100 duration-200 text-primary">
+                    <div className="whitespace-nowrap truncate opacity-0 group-hover:opacity-100 duration-200 text-primary">
                       {content.attributes.categories.data.map((category: any, index: number) => (
-                        <div className="inline text-sm mr-2 whitespace-nowrap truncate">{category.attributes.name}{content.attributes.categories.data.length - 1 === index ? "" : ", "}</div>
+                        <div className="inline text-sm whitespace-nowrap truncate">{category.attributes.name}{content.attributes.categories.data.length - 1 === index ? "" : ", "}</div>
                       ))
                       }
                     </div>

@@ -3,40 +3,45 @@ import Image from "next/image";
 import Link from "next/link";
 
 
+interface Categories {
+  data: Array<{
+    id: number;
+    attributes: {
+      name: string
+    }
+  }>
+}
+
+interface Cover {
+  data: {
+    attributes: {
+      url: string;
+      alternativeText: string;
+    }
+  }
+}
+
+interface Content {
+  data: {
+    id: number;
+    attributes: {
+      cover: Cover;
+      categories: Categories;
+      name: string;
+    }
+  }
+}
+
 interface HighlightGridViewProps {
   contentData: {
     data: Array<{
       id: number;
       attributes: {
-        content: {
-          data: {
-            id: number,
-            attributes: {
-              cover: {
-                data: {
-                  attributes: {
-                    url: string,
-                    alternativeText: string
-                  }
-                }
-              }
-              categories: {
-                data: Array<{
-                  id: number;
-                  attributes: {
-                    name: string
-                  }
-                }>
-              },
-              name: string
-            }
-          }
-        }
+        content: Content
       };
     }>;
   };
 }
-
 
 export function HighlightGridView(props: HighlightGridViewProps) {
   const { contentData } = props;
@@ -64,7 +69,7 @@ export function HighlightGridView(props: HighlightGridViewProps) {
                   {
                     <div className="whitespace-nowrap truncate opacity-0 group-hover:opacity-100 duration-200 text-primary">
                       {content.attributes.content.data.attributes.categories.data.map((category, index) => (
-                        <div className="inline text-sm mr-2 whitespace-nowrap truncate">{category.attributes.name}{content.attributes.content.data.attributes.categories.data.length - 1 === index ? "" : ", "}</div>
+                        <div className="inline text-sm whitespace-nowrap truncate">{category.attributes.name}{content.attributes.content.data.attributes.categories.data.length - 1 === index ? "" : ", "}</div>
                       ))
                       }
                     </div>
@@ -75,6 +80,6 @@ export function HighlightGridView(props: HighlightGridViewProps) {
           </div>
         ))
       }
-    </div >
+    </div>
   )
 }

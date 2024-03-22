@@ -16,8 +16,8 @@ export const fontSans = FontSans({
 })
 
 export const metadata: Metadata = {
-  title: "My Site",
-  description: "this is my site that get content from strapi",
+  title: "Food Review",
+  description: "this is food review site",
 };
 
 interface RootLayoutProps {

@@ -4,10 +4,6 @@ import { useEffect, forwardRef, useState } from "react"
 
 export function CurrentFilter(props: any) {
 
-  console.log("-------")
-  console.log(props)
-  console.log("-------")
-
   interface Category {
     id: number,
     attributes: {

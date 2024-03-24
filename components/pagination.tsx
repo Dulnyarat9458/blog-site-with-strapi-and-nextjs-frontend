@@ -13,7 +13,19 @@ import {
 
 import { usePathname, useSearchParams } from 'next/navigation';
 
-export function PaginationMain({ paginationValue }: any) {
+interface Props {
+  paginationValue: PaginationValue
+}
+
+interface PaginationValue {
+  page: number,
+  pageSize: number,
+  pageCount: number
+  total: number;
+}
+
+export function PaginationMain(props: Props) {
+  const { paginationValue } = props;
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const createPageURL = (pageNumber: number | string) => {

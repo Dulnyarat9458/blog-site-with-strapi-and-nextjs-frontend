@@ -15,14 +15,14 @@ import { Separator } from "@/components/ui/separator";
 
 export default function RelatedCarousel(props: any) {
 
-  interface Content {
+  interface Contents {
     data: Array<{
       id: number;
       attributes: any;
     }>
   }
 
-  const [Contents, setContents]: any = useState({});
+  const [Contents, setContents]: any = useState();
 
   function fetchData(tagsId: number[], categoriesId: number[], cid: number) {
     const options = {
@@ -61,15 +61,15 @@ export default function RelatedCarousel(props: any) {
             .then(res => res.json())
             .then(data => {
               setContents(data);
+              console.log("===test===")
+              console.log(data);
+              console.log("==========")
             }).catch((error) => console.error(error));
         }
       }).catch((error) => console.error(error));
   }
 
   useEffect(() => fetchData(props.tagsId, props.categoriesId, props.cid), [])
-
-  console.log(Contents)
-
   return (
     <div className="my-12">
       <Separator />
@@ -81,36 +81,41 @@ export default function RelatedCarousel(props: any) {
         }}
         className="w-full relative mx-auto"
       >
-        <CarouselContent className="-ml-4">
-          {Contents.data?.map((content: any, index: any) => (
-            <CarouselItem key={index} className="relative aspect-square basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6">
-              <Link href={"/contents/" + content.id} className="group point-cursor">
-                <div className="overflow-hidden object-cover object-center h-full w-full">
-                  <Image
-                    src={process.env.NEXT_PUBLIC_API_URL + "" + content.attributes.cover.data.attributes.url}
-                    width={1200}
-                    height={1200}
-                    alt={content.attributes.cover.data.attributes.alternativeText}
-                    className="transition group-hover:scale-110 object-cover object-center h-full w-full duration-300"
-                  />
-                </div>
-                <div
-                  className="duration-300  w-[calc(100%_-_16px)]  h-full flex justify-center items-end absolute bottom-0 text-center font-semibold
-                  bg-gradient-to-t from-black/70 from-20% via-black/30 via-70% to-black/0 transition-all hover:bg-black/50 ">
-                  <div className="p-1 text-white duration-300 transition-all absolute bottom-4 group-hover:bottom-1/2 group-hover:translate-y-1/2 group-hover:text-primary">
-                    "{content.attributes.name}"
-                    <div className="whitespace-nowrap truncate opacity-0 group-hover:opacity-100 duration-200 text-primary">
-                      {content.attributes.categories.data.map((category: any, index: number) => (
-                        <div className="inline text-sm whitespace-nowrap truncate">{category.attributes.name}{content.attributes.categories.data.length - 1 === index ? "" : ", "}</div>
-                      ))
-                      }
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
+        {
+          Contents ?
+            <div>
+              <CarouselContent className="-ml-4">
+                {Contents.data?.map((content: any, index: any) => (
+                  <CarouselItem key={index} className="relative aspect-square basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6">
+                    <Link href={"/contents/" + content.id} className="group point-cursor">
+                      <div className="overflow-hidden object-cover object-center h-full w-full">
+                        <Image
+                          src={process.env.NEXT_PUBLIC_API_URL + "" + content.attributes.cover.data.attributes.url}
+                          width={1200}
+                          height={1200}
+                          alt={content.attributes.cover.data.attributes.alternativeText}
+                          className="transition group-hover:scale-110 object-cover object-center h-full w-full duration-300"
+                        />
+                      </div>
+                      <div
+                        className="duration-300  w-[calc(100%_-_16px)]  h-full flex justify-center items-end absolute bottom-0 text-center font-semibold
+          bg-gradient-to-t from-black/70 from-20% via-black/30 via-70% to-black/0 transition-all hover:bg-black/50 ">
+                        <div className="p-1 text-white duration-300 transition-all absolute bottom-4 group-hover:bottom-1/2 group-hover:translate-y-1/2 group-hover:text-primary">
+                          "{content.attributes.name}"
+                          <div className="whitespace-nowrap truncate opacity-0 group-hover:opacity-100 duration-200 text-primary">
+                            {content.attributes.categories.data.map((category: any, index: number) => (
+                              <div className="inline text-sm whitespace-nowrap truncate">{category.attributes.name}{content.attributes.categories.data.length - 1 === index ? "" : ", "}</div>
+                            ))
+                            }
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  </CarouselItem>
+                ))}
+              </CarouselContent></div>
+            : <div>No data</div>
+        }
         <CarouselPrevious className="left-[-20px] w-10 h-10 shadow-md text-primary disabled:opacity-0" />
         <CarouselNext className="right-[-20px] w-10 h-10 shadow-md text-primary disabled:opacity-0" />
       </Carousel>

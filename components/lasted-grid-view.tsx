@@ -2,30 +2,38 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-interface ContentAttribute {
-  cover: {
-    data: {
-      attributes: {
-        url: string;
-        alternativeText: string;
-      };
+
+interface Categories {
+  data: Array<{
+    id: number;
+    attributes: {
+      name: string
+    }
+  }>
+}
+
+interface Cover {
+  data: {
+    attributes: {
+      url: string;
+      alternativeText: string;
     };
   };
-  categories: any;
-  name: string;
 }
 
 interface Content {
   id: string;
-  attributes: ContentAttribute;
-}
-
-interface ContentData {
-  data: Content[];
+  attributes: {
+    cover: Cover;
+    categories: Categories;
+    name: string;
+  };
 }
 
 interface LastedGridViewProps {
-  contentData: ContentData;
+  contentData: {
+    data: Content[]
+  };
 }
 
 export function LastedGridView(props: LastedGridViewProps) {

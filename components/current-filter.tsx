@@ -1,48 +1,61 @@
 "use client"
 
-import { useEffect, forwardRef, useState } from "react"
+import { useEffect, useState } from "react"
 
-export function CurrentFilter(props: any) {
 
-  interface Category {
+interface Props {
+  keyword: string;
+  categories: string;
+  tags: string;
+}
+
+interface Categories {
+  data: Array<{
     id: number,
     attributes: {
       name: string
     }
-  }
+  }>
+}
 
+interface Tags {
+  data: Array<{
+    id: number,
+    attributes: {
+      name: string
+    }
+  }>
+}
 
-  const [categories, setCategories] = useState([]);
-  const [tags, setTags] = useState([]);
+export function CurrentFilter(props: Props) {
+  const [categories, setCategories] = useState<{ [key: number]: string }>([]);
+  const [tags, setTags] = useState<{ [key: number]: string }>([]);
 
   const getInitialValue = () => {
     const urlCategories = `${process.env.NEXT_PUBLIC_API_URL}/api/categories`
     const urlTag = `${process.env.NEXT_PUBLIC_API_URL}/api/tags`
-    const requestOptions: any = {
+    const requestOptions = {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,
       },
     };
-
-    let arrCat: any = {};
-    let arrTag: any = {};
-
+    let arrCat: { [key: number]: string };
+    let arrTag: { [key: number]: string };
     fetch(urlCategories, requestOptions)
       .then(response => response.json())
-      .then(data => {
-        data.data.map((value: any, index: number) => {
-          arrCat[value.id] = value.attributes.name;
+      .then((data: Categories) => {
+        data.data.map((cat, _) => {
+          arrCat[cat.id] = cat.attributes.name;
         })
         setCategories(arrCat)
-        console.log(arrCat)
       }).catch((error) => console.error(error));
     fetch(urlTag, requestOptions)
       .then(response => response.json())
-      .then(data => {
-        data.data.map((value: any, index: number) => {
-          arrTag[value.id] = value.attributes.name;
+      .then((data: Tags) => {
+        data.data.map((tag, _) => {
+          arrTag[tag.id] = tag.attributes.name;
         })
         setTags(arrTag)
       }).catch((error) => console.error(error));
@@ -66,15 +79,14 @@ export function CurrentFilter(props: any) {
           </div>
         )
       }
-
       {
         categoryList.length > 0 && (
           <div>
             <span className="font-semibold text-xl">Categories:</span>
             {
-              categoryList.map((element: number, index: number) => (
+              categoryList.map((element, index) => (
                 <div key={index} className="inline ml-2 text-xl">
-                  {categories[element]}
+                  {categories[parseInt(element)]}
                   {index < categoryList.length - 1 && ','}
                 </div>
               ))
@@ -87,9 +99,9 @@ export function CurrentFilter(props: any) {
           <div>
             <span className="font-semibold text-xl">Tags:</span>
             {
-              tagList.map((element: number, index: number) => (
+              tagList.map((element, index) => (
                 <div key={index} className="inline ml-2 text-xl">
-                  {tags[element]}
+                  {tags[parseInt(element)]}
                   {index < tagList.length - 1 && ','}
                 </div>
               ))

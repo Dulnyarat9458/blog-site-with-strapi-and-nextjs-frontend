@@ -1,26 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
-import { Separator } from "@/components/ui/separator"
-import { CurrentFilter } from "@/components/current-filter";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination"
+import Image from "next/image";
 import { PaginationMain } from "@/components/pagination";
+import { CurrentFilter } from "@/components/current-filter";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 interface ContentAttributes {
   cover: {
@@ -31,21 +13,45 @@ interface ContentAttributes {
       }
     }
   },
-  categories: any,
+  categories: Categories,
   name: string;
 }
 
+interface Categories {
+  data: Array<{
+    attributes: {
+      name: string
+    }
+  }>
+}
+
 interface Content {
-  id: string;
-  attributes: ContentAttributes;
+  data: Array<{
+    id: string;
+    attributes: ContentAttributes;
+  }>;
+  meta: {
+    pagination: {
+      page: number,
+      pageSize: number,
+      pageCount: number
+      total: number;
+    }
+  }
+}
+
+interface SearchParams {
+  keyword: string;
+  category: string;
+  tag: string;
+  page: number;
 }
 
 interface Props {
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: SearchParams
 }
 
-async function getLastedData(searchParams: any) {
-
+async function getLastedData(searchParams: SearchParams) {
   const keyword = searchParams.keyword;
   const category = searchParams.category;
   const tag = searchParams.tag;
@@ -70,19 +76,17 @@ async function getLastedData(searchParams: any) {
 
   if (category && category !== undefined) {
     arrCategory = category.split(",");
-    arrCategory.map((id: number, index: number) => {
+    arrCategory.map((id, index) => {
       url += `&filters[categories][id][$in][${index}]=${id}`
     });
-
   }
 
   if (tag && tag !== undefined) {
     arrTag = tag.split(",");
-    arrTag.map((id: number, index: number) => {
+    arrTag.map((id, index) => {
       url += `&filters[tags][id][$in][${index}]=${id}`
     });
   }
-
 
   url += `&sort[0]=createdAt:desc&pagination[pageSize]=${pageSize}`;
 
@@ -101,12 +105,12 @@ async function getLastedData(searchParams: any) {
   return res.json()
 }
 
-export default async function TagsPage({ searchParams }: Props) {
-  const contents = await getLastedData(searchParams);
+export default async function TagsPage(props: Props) {
+  const contents: Content = await getLastedData(props.searchParams);
   return (
     <div>
       <div>
-        <CurrentFilter keyword={searchParams.keyword} categories={searchParams.category} tags={searchParams.tag} />
+        <CurrentFilter keyword={props.searchParams.keyword} categories={props.searchParams.category} tags={props.searchParams.tag} />
       </div>
       <div className="mb-12">
         <h1 className="text-center mx-auto font-bold text-4xl mt-14 mb-5">Contents</h1>
@@ -114,9 +118,9 @@ export default async function TagsPage({ searchParams }: Props) {
           contents.data.length !== 0 ? (<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 my-16">
             {
               contents.data.map(
-                (content: Content) => {
+                (content,index) => {
                   return (
-                    <Link href={"/contents/" + content.id}>
+                    <Link key={index} href={"/contents/" + content.id}>
                       <Card className="h-full border-border duration-200 hover:border-primary hover:text-primary group flex flex-col">
                         <CardHeader className="p-0">
                           <div className="aspect-square w-full h-auto overflow-hidden rounded-t-lg">
@@ -134,8 +138,8 @@ export default async function TagsPage({ searchParams }: Props) {
                         <CardContent className="px-4 pt-4 pb-6 flex-1 relative">
                           <CardTitle className="text-xl mb-1">{content.attributes.name}</CardTitle>
                           {
-                            content.attributes.categories.data.map((category: any, index: number) => (
-                              <div className="inline mr-2 whitespace-nowrap truncate">{category.attributes.name}{content.attributes.categories.data.length - 1 === index ? "" : ", "}</div>
+                            content.attributes.categories.data.map((category, index) => (
+                              <div key={index} className="inline mr-2 whitespace-nowrap truncate">{category.attributes.name}{content.attributes.categories.data.length - 1 === index ? "" : ", "}</div>
                             ))
                           }
                           <div className="mt-2 bottom-0 h-2 z-40"></div>

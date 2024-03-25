@@ -1,56 +1,36 @@
 "use client"
 
-import { AlignJustify, X, Search, RotateCcw } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { DarkModeToggle } from "@/components/darkmode-toggle"
-import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
-import { Separator } from "@/components/ui/separator"
-import { Checkbox } from "@/components/ui/checkbox"
-import { useRouter } from 'next/navigation';
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { useForm } from "react-hook-form"
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu"
-import { useTheme } from "next-themes"
-
-import Link from "next/link"
-
-import { useEffect, forwardRef, useState } from "react"
-
-import { cn } from "@/lib/utils"
+import { forwardRef, useEffect, useState } from "react"
 
 import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { useTheme } from "next-themes"
+import { useForm } from "react-hook-form"
+import { AlignJustify, RotateCcw, Search, X } from "lucide-react"
 
+import Link from "next/link"
+import { cn } from "@/lib/utils"
+import { useRouter } from 'next/navigation';
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Switch } from "@/components/ui/switch"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Separator } from "@/components/ui/separator"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { DarkModeToggle } from "@/components/darkmode-toggle"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu"
 export function Header() {
 
-  interface Category {
+  interface Categories {
+    id: number,
+    attributes: {
+      name: string
+    }
+  }
+
+  interface Tags {
     id: number,
     attributes: {
       name: string
@@ -59,12 +39,11 @@ export function Header() {
 
   const router = useRouter();
   const { theme, setTheme } = useTheme()
-  const [categories, setCategories] = useState([]);
-  const [tags, setTags] = useState([]);
   const [isSideOpen, setIsSideOpen] = useState(false);
   const [openSearch, setOpenSearch] = useState(false);
-
   const [isMobileDarkMode, setIsMobileDarkmode] = useState(false);
+  const [categories, setCategories] = useState<Categories[]>([]);
+  const [tags, setTags] = useState<Tags[]>([]);
 
   const formSchema = z.object({
     keyword: z.string(),
@@ -81,7 +60,6 @@ export function Header() {
     },
   })
 
-
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const categoryList = (values.categories).join(',');
     const tagList = (values.tags).join(',');
@@ -95,11 +73,10 @@ export function Header() {
     form.resetField("tags");
   }
 
-
   const getInitialValue = () => {
     const urlCategories = `${process.env.NEXT_PUBLIC_API_URL}/api/categories`
     const urlTag = `${process.env.NEXT_PUBLIC_API_URL}/api/tags`
-    const requestOptions: any = {
+    const requestOptions = {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
@@ -111,7 +88,6 @@ export function Header() {
       .then(response => response.json())
       .then(data => {
         setCategories(data.data)
-        console.log(data.data)
       }).catch((error) => console.error(error));
 
     fetch(urlTag, requestOptions)
@@ -129,13 +105,6 @@ export function Header() {
     setIsSideOpen(false);
   }
 
-  const checkDarkInit = () => {
-    if (theme === 'dark') {
-      setIsMobileDarkmode(true);
-    } else {
-      setIsMobileDarkmode(false);
-    }
-  }
 
   const changeMode = () => {
     if (theme === 'dark') {
@@ -148,9 +117,16 @@ export function Header() {
   }
 
   useEffect(() => {
+    const checkDarkInit = () => {
+      if (theme === 'dark') {
+        setIsMobileDarkmode(true);
+      } else {
+        setIsMobileDarkmode(false);
+      }
+    }
     getInitialValue();
     checkDarkInit();
-  }, [])
+  }, [theme])
 
   return (
     <>
@@ -168,7 +144,7 @@ export function Header() {
                     <DialogHeader>
                       <DialogTitle>Search</DialogTitle>
                       <DialogDescription>
-                        find your target
+                        Find your target
                       </DialogDescription>
                     </DialogHeader>
                     <Separator orientation="horizontal" />
@@ -196,9 +172,9 @@ export function Header() {
                                 <FormLabel className="text-base">Categories</FormLabel>
                               </div>
                               <div className="grid grid-cols-1 md:grid-cols-2">
-                                {categories.map((category: any) => (
+                                {categories.map((category, index) => (
                                   <FormField
-                                    key={category.id}
+                                    key={index}
                                     control={form.control}
                                     name="categories"
                                     render={({ field }) => {
@@ -243,7 +219,7 @@ export function Header() {
                                 <FormLabel className="text-base">Tag</FormLabel>
                               </div>
                               <div className="grid grid-cols-1 md:grid-cols-2">
-                                {tags.map((tag: any) => (
+                                {tags.map((tag) => (
                                   <FormField
                                     key={tag.id}
                                     control={form.control}
@@ -306,7 +282,7 @@ export function Header() {
                 <NavigationMenuContent>
                   <ul className="w-full min-w-52">
                     {
-                      categories?.map((category: Category, index: number) => {
+                      categories.map((category, index) => {
                         return (
                           <ListItem key={index} href={`/categories/${category.id}`} title={category.attributes.name} />
                         );
@@ -332,7 +308,7 @@ export function Header() {
           <div className="overflow-y-auto h-[85%]">
             <ul className="w-full overflow-y-auto">
               {
-                categories?.map((category: Category, index: number) => {
+                categories.map((category, index) => {
                   return (
                     <Link key={index} href={`/categories/${category.id}`} onClick={closeSidebar}>
                       <li className="my-5" >{category.attributes.name} </li>

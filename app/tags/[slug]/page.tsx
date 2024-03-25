@@ -1,37 +1,64 @@
-import Image from "next/image";
 import Link from "next/link";
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-
+import Image from "next/image";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 interface Props {
   params: { slug: string }
   searchParams: { [key: string]: string | string[] | undefined }
 }
 
-interface ContentAttributes {
-  cover: {
-    data: {
-      attributes: {
-        url: string;
-        alternativeText: string;
-      }
+
+interface Categories {
+  data: Array<{
+    attributes: {
+      name: string
     }
-  },
-  name: string;
-  categories: any;
+  }>
 }
 
-interface Content {
-  id: string;
-  attributes: ContentAttributes;
+
+interface Contents {
+  data: {
+    attributes: {
+      contents: {
+        data: Array<{
+          id: string;
+          attributes: {
+            cover: {
+              data: {
+                attributes: {
+                  url: string;
+                  alternativeText: string;
+                }
+              }
+            },
+            name: string;
+            categories: Categories;
+          };
+        }>;
+      }
+      name: string;
+    }
+  }
+
+
 }
+
+
+// interface Content {
+//   id: string;
+//   attributes: {
+//     cover: {
+//       data: {
+//         attributes: {
+//           url: string;
+//           alternativeText: string;
+//         }
+//       }
+//     },
+//     name: string;
+//     categories: Categories;
+//   };
+// }
 
 async function getData(slug: string) {
   const options = {
@@ -49,7 +76,7 @@ async function getData(slug: string) {
 }
 
 export default async function TagsPage(props: Props) {
-  const contents = await getData(props.params.slug);
+  const contents: Contents = await getData(props.params.slug);
   return (
     <div>
       <div className="mb-12">
@@ -57,12 +84,12 @@ export default async function TagsPage(props: Props) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {
             contents.data.attributes.contents.data.map(
-              (content: Content) => {
+              (content, index) => {
                 return (
-                  <Link href={"/contents/" + content.id}>
+                  <Link key={index} href={"/contents/" + content.id}>
                     <Card className="h-full border-border duration-200 hover:border-primary hover:text-primary group flex flex-col">
                       <CardHeader className="p-0">
-                      <div className="aspect-square w-full h-auto overflow-hidden rounded-t-lg">
+                        <div className="aspect-square w-full h-auto overflow-hidden rounded-t-lg">
                           <Image
                             src={process.env.NEXT_PUBLIC_API_URL + "" + content.attributes.cover.data.attributes.url}
                             layout="responsive"
@@ -76,8 +103,8 @@ export default async function TagsPage(props: Props) {
                       <CardContent className="px-4 pt-4 pb-6 flex-1 relative">
                         <CardTitle className="text-xl mb-1">{content.attributes.name}</CardTitle>
                         {
-                          content.attributes.categories.data.map((category: any, index: number) => (
-                            <div className="inline mr-2 whitespace-nowrap truncate">{category.attributes.name}{content.attributes.categories.data.length - 1 === index ? "" : ", "}</div>
+                          content.attributes.categories.data.map((category, index) => (
+                            <div key={index} className="inline mr-2 whitespace-nowrap truncate">{category.attributes.name}{content.attributes.categories.data.length - 1 === index ? "" : ", "}</div>
                           ))
                         }
                         <div className="mt-2 bottom-0 h-2 z-40"></div>

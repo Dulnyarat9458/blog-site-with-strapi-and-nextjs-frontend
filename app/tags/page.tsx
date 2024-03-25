@@ -1,35 +1,22 @@
-import Image from "next/image";
 import Link from "next/link";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-
-interface Props {
-  params: { slug: string }
-  searchParams: { [key: string]: string | string[] | undefined }
-}
-
-interface ContentAttributes {
-  cover: {
-    data: {
-      attributes: {
-        url: string;
-        alternativeText: string;
-      }
+interface Cover {
+  data: {
+    attributes: {
+      url: string;
+      alternativeText: string;
     }
-  },
-  name: string;
+  }
 }
 
-interface Content {
-  id: string;
-  attributes: ContentAttributes;
+interface Contents {
+  data: Array<{
+    id: string;
+    attributes: {
+      cover: Cover;
+      name: string;
+    };
+  }>
 }
 
 async function getData() {
@@ -48,8 +35,7 @@ async function getData() {
 }
 
 export default async function TagsListPage() {
-  const contents = await getData();
-  console.log(contents.data)
+  const contents: Contents = await getData();
   return (
     <div>
       <div className="mb-12">
@@ -57,9 +43,9 @@ export default async function TagsListPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
           {
             contents.data.map(
-              (content: Content) => {
+              (content, index) => {
                 return (
-                  <Link href={"/tags/" + content.id} className="text-center mx-2 bg-primary text-primary-foreground px-2 py-1 rounded-lg mb-8 duration-200 transition-all">
+                  <Link key={index} href={"/tags/" + content.id} className="text-center mx-2 bg-primary text-primary-foreground px-2 py-1 rounded-lg mb-8 duration-200 transition-all">
                     {content.attributes.name}
                   </Link>
                 )

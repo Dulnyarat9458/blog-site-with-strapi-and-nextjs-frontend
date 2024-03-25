@@ -1,24 +1,32 @@
-import Image from "next/image";
-import Link from "next/link";
 import { Metadata, ResolvingMetadata } from 'next'
-import { BlocksRenderer } from '@strapi/blocks-react-renderer';
+
+import Link from "next/link";
 import RelatedCarousel from "@/components/related-carousel";
 import CurrentDirectory from "@/components/current-directory";
+import { BlocksRenderer } from '@strapi/blocks-react-renderer';
 
 interface Props {
   params: { slug: string }
   searchParams: { [key: string]: string | string[] | undefined }
 }
 
-interface Tag {
-  id: string
+interface Categories {
+  id: number,
   attributes: {
-    name: string
+    name: string,
   }
 }
 
+interface Tags {
+  id: number,
+  attributes: {
+    name: string,
+  }
+}
+
+
 export async function generateMetadata(
-  { params, searchParams }: Props,
+  { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const slug = params.slug
@@ -56,10 +64,10 @@ async function getData(slug: string) {
 
 export default async function ContentPage(props: Props) {
   const content = await getData(props.params.slug);
-  const categories = content.data.attributes.categories.data;
-  const tags = content.data.attributes.tags.data;
-  const categoriesListId: any = [];
-  const tagsListId: any = [];
+  const categories: Categories[] = content.data.attributes.categories.data;
+  const tags: Tags[] = content.data.attributes.tags.data;
+  const categoriesListId: number[] = [];
+  const tagsListId: number[] = [];
   const publishedAt = new Date(content.data.attributes.publishedAt);
   const formattedDate = new Intl.DateTimeFormat('en-GB', {
     year: 'numeric',
@@ -71,10 +79,11 @@ export default async function ContentPage(props: Props) {
     hour12: false
   }).format(publishedAt);
 
-  categories.map((value: any) => {
+
+  categories.map((value) => {
     categoriesListId.push(value.id)
   })
-  tags.map((value: any) => {
+  tags.map((value) => {
     tagsListId.push(value.id)
   })
 
@@ -92,16 +101,16 @@ export default async function ContentPage(props: Props) {
         <div className="my-8"></div>
         <div><span>Tag:</span>
           {
-            content.data.attributes.tags.data.map((tag: Tag) => {
+            content.data.attributes.tags.data.map((tag: Tags, index: number) => {
               return (
-                <Link href={`/tags/${tag.id}`}>
+                <Link key={index} href={`/tags/${tag.id}`}>
                   <span className="mx-2 bg-primary text-primary-foreground px-2 py-1 rounded-lg mb-8 duration-200 transition-all hover:text-black">{tag.attributes.name}</span>
                 </Link>
               )
             })
           }
         </div>
-        <RelatedCarousel categoriesId={categoriesListId} tagsId={tagsListId} cid={props.params.slug} />
+        <RelatedCarousel categoriesId={categoriesListId} tagsId={tagsListId} cid={parseInt(props.params.slug)} />
       </div>
     </>
   );

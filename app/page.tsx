@@ -1,6 +1,6 @@
-import { HighlightGridView } from "@/components/highlight-grid-view"
-import { LastedGridView } from "@/components/lasted-grid-view";
 import Link from "next/link";
+import { LastedGridView } from "@/components/lasted-grid-view";
+import { HighlightGridView } from "@/components/highlight-grid-view"
 
 async function getHighlightData() {
   const options = {

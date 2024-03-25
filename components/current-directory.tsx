@@ -1,9 +1,12 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+interface Props {
+  title: string;
+}
 
-export default function CurrentDirectory(props: any) {
+export default function CurrentDirectory(props: Props) {
   const pathname = usePathname();
   const pathSegments = pathname.split('/').filter(Boolean);
   pathSegments.pop();

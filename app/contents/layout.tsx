@@ -1,7 +1,5 @@
 import { Fira_Code as FontSans } from "next/font/google";
 
-import CurrentDirectory from "@/components/current-directory";
-
 export const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",

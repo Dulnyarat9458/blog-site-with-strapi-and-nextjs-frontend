@@ -1,7 +1,7 @@
 import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
 
+import Link from 'next/link';
+import Image from 'next/image';
 
 interface Categories {
   data: Array<{
@@ -57,11 +57,11 @@ export function LastedGridView(props: LastedGridViewProps) {
               bg-gradient-to-t from-black/70 from-20% via-black/30 via-70% to-black/0 transition-all hover:bg-black/50"
             >
               <div className="p-1 text-white duration-300 transition-all absolute bottom-4 group-hover:bottom-1/2 group-hover:translate-y-1/2 group-hover:text-primary">
-                "{content.attributes.name}"
+              &quot;{content.attributes.name}&quot;
                 {
                   <div className='whitespace-nowrap truncate opacity-0 group-hover:opacity-100 duration-200 text-primary'>
-                    {content.attributes.categories.data.map((category: any, index: number) => (
-                      <div className="inline text-sm whitespace-nowrap truncate">{category.attributes.name}{content.attributes.categories.data.length - 1 === index ? "" : ", "}</div>
+                    {content.attributes.categories.data.map((category, index) => (
+                      <div key={index} className="inline text-sm whitespace-nowrap truncate">{category.attributes.name}{content.attributes.categories.data.length - 1 === index ? "" : ", "}</div>
                     ))
                     }
                   </div>

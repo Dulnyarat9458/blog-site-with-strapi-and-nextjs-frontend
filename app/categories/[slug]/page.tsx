@@ -1,36 +1,43 @@
-import Image from "next/image";
 import Link from "next/link";
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import Image from "next/image";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 interface Props {
   params: { slug: string }
   searchParams: { [key: string]: string | string[] | undefined }
 }
 
-interface ContentAttributes {
-  cover: {
-    data: {
-      attributes: {
-        url: string;
-        alternativeText: string;
-      }
+interface Categories {
+  data: Array<{
+    attributes: {
+      name: string
     }
-  },
-  categories: any,
-  name: string;
+  }>
 }
 
 interface Content {
-  id: String,
-  attributes: ContentAttributes
+  data: {
+    attributes: {
+      name: string;
+      contents: {
+        data: Array<{
+          id: String,
+          attributes: {
+            cover: {
+              data: {
+                attributes: {
+                  url: string;
+                  alternativeText: string;
+                }
+              }
+            },
+            categories: Categories,
+            name: string;
+          }
+        }>
+      }
+    }
+  }
 }
 
 async function getData(slug: string) {
@@ -47,12 +54,11 @@ async function getData(slug: string) {
   if (!res.ok) {
     throw new Error('That content can’t be found.')
   }
-
   return res.json()
 }
 
 export default async function ContentPage(props: Props) {
-  const contents = await getData(props.params.slug);
+  const contents: Content = await getData(props.params.slug);
 
   return (
     <div>
@@ -61,9 +67,9 @@ export default async function ContentPage(props: Props) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {
             contents.data.attributes.contents.data.map(
-              (content: Content) => {
+              (content, index) => {
                 return (
-                  <Link href={"/contents/" + content.id}>
+                  <Link key={index} href={"/contents/" + content.id}>
                     <Card className="h-full border-border duration-200 hover:border-primary hover:text-primary group flex flex-col">
                       <CardHeader className="p-0">
                         <div className="aspect-square w-full h-auto overflow-hidden rounded-t-lg">
@@ -81,8 +87,8 @@ export default async function ContentPage(props: Props) {
                       <CardContent className="px-4 pt-4 pb-6 flex-1 relative">
                         <CardTitle className="text-xl mb-1">{content.attributes.name}</CardTitle>
                         {
-                          content.attributes.categories.data.map((category: any, index: number) => (
-                            <div className="inline mr-2 whitespace-nowrap truncate">{category.attributes.name}{content.attributes.categories.data.length - 1 === index ? "" : ", "}</div>
+                          content.attributes.categories.data.map((category, index) => (
+                            <div key={index} className="inline mr-2 whitespace-nowrap truncate">{category.attributes.name}{content.attributes.categories.data.length - 1 === index ? "" : ", "}</div>
                           ))
                         }
                         <div className="mt-2 bottom-0 h-2 z-40"></div>
@@ -99,3 +105,4 @@ export default async function ContentPage(props: Props) {
     </div >
   );
 }
+

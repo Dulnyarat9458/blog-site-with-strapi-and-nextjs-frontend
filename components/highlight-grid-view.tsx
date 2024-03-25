@@ -1,6 +1,7 @@
 import * as React from "react"
-import Image from "next/image";
+
 import Link from "next/link";
+import Image from "next/image";
 
 
 interface Categories {
@@ -49,7 +50,7 @@ export function HighlightGridView(props: HighlightGridViewProps) {
     <div className="w-full grid cols-2 lg:grid-cols-4 gap-4">
       {
         contentData.data.map((content, index) => (
-          <div className={`relative aspect-square ${(index == 0) ? 'col-span-2 row-span-2' : 'col-span-2 row-span-2  sm:col-span-1 sm:row-span-1 '}`}>
+          <div key={index} className={`relative aspect-square ${(index == 0) ? 'col-span-2 row-span-2' : 'col-span-2 row-span-2  sm:col-span-1 sm:row-span-1 '}`}>
             <Link href={"contents/" + content.attributes.content.data.id} className="group point-cursor">
               <div className="overflow-hidden object-cover object-center h-full w-full">
                 <Image
@@ -65,11 +66,11 @@ export function HighlightGridView(props: HighlightGridViewProps) {
                 bg-gradient-to-t
               from-black/70 from-20% via-black/30 via-70% to-black/0 transition-all hover:bg-black/50 ">
                 <div className="text-white duration-300 transition-all absolute bottom-8 group-hover:bottom-1/2 group-hover:translate-y-1/2 group-hover:text-primary p-1">
-                  "{content.attributes.content.data.attributes.name}"
+                &quot;{content.attributes.content.data.attributes.name}&quot;
                   {
                     <div className="whitespace-nowrap truncate opacity-0 group-hover:opacity-100 duration-200 text-primary">
                       {content.attributes.content.data.attributes.categories.data.map((category, index) => (
-                        <div className="inline text-sm whitespace-nowrap truncate">{category.attributes.name}{content.attributes.content.data.attributes.categories.data.length - 1 === index ? "" : ", "}</div>
+                        <div key={index} className="inline text-sm whitespace-nowrap truncate">{category.attributes.name}{content.attributes.content.data.attributes.categories.data.length - 1 === index ? "" : ", "}</div>
                       ))
                       }
                     </div>

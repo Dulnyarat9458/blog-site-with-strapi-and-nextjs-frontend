@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
-import { Anuphan as FontSans } from "next/font/google";
-import { ThemeProvider } from "@/components/theme-provider"
+import type, { Metadata } from "next";
+
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { Anuphan as FontSans } from "next/font/google";
+import { ThemeProvider } from "@/components/theme-provider"
 
 import { cn } from "../lib/utils"
 

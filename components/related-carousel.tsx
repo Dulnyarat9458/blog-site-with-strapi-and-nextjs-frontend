@@ -1,28 +1,50 @@
-"use client"
-
 import * as React from "react"
 import { useEffect, useState } from "react";
-import Image from "next/image";
+
 import Link from "next/link";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
+import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 
-export default function RelatedCarousel(props: any) {
-
-  interface Contents {
-    data: Array<{
-      id: number;
-      attributes: any;
-    }>
+interface Cover {
+  data: {
+    attributes: {
+      url: string;
+      alternativeText: string;
+      
+    }
   }
+}
 
-  const [Contents, setContents]: any = useState();
+interface Categories {
+  data: Array<{
+    attributes: {
+      name: string;
+    }
+  }>
+}
+
+interface Contents {
+  data: Array<{
+    id: number;
+    attributes: {
+      name: string;
+      cover: Cover;
+      categories: Categories;
+    };
+  }>
+}
+
+interface Props {
+  tagsId: number[];
+  categoriesId: number[];
+  cid: number;
+}
+
+
+export default function RelatedCarousel(props: Props) {
+
+  const [contents, setContents] = useState<Contents>();
 
   function fetchData(tagsId: number[], categoriesId: number[], cid: number) {
     const options = {
@@ -61,15 +83,12 @@ export default function RelatedCarousel(props: any) {
             .then(res => res.json())
             .then(data => {
               setContents(data);
-              console.log("===test===")
-              console.log(data);
-              console.log("==========")
             }).catch((error) => console.error(error));
         }
       }).catch((error) => console.error(error));
   }
 
-  useEffect(() => fetchData(props.tagsId, props.categoriesId, props.cid), [])
+  useEffect(() => fetchData(props.tagsId, props.categoriesId, props.cid), [props.tagsId, props.categoriesId, props.cid])
   return (
     <div className="my-12">
       <Separator />
@@ -82,10 +101,10 @@ export default function RelatedCarousel(props: any) {
         className="w-full relative mx-auto"
       >
         {
-          Contents ?
+          contents ?
             <div>
               <CarouselContent className="-ml-4">
-                {Contents.data?.map((content: any, index: any) => (
+                {contents.data.map((content, index) => (
                   <CarouselItem key={index} className="relative aspect-square basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6">
                     <Link href={"/contents/" + content.id} className="group point-cursor">
                       <div className="overflow-hidden object-cover object-center h-full w-full">
@@ -101,10 +120,10 @@ export default function RelatedCarousel(props: any) {
                         className="duration-300  w-[calc(100%_-_16px)]  h-full flex justify-center items-end absolute bottom-0 text-center font-semibold
           bg-gradient-to-t from-black/70 from-20% via-black/30 via-70% to-black/0 transition-all hover:bg-black/50 ">
                         <div className="p-1 text-white duration-300 transition-all absolute bottom-4 group-hover:bottom-1/2 group-hover:translate-y-1/2 group-hover:text-primary">
-                          "{content.attributes.name}"
+                          &quot;{content.attributes.name}&quot;
                           <div className="whitespace-nowrap truncate opacity-0 group-hover:opacity-100 duration-200 text-primary">
-                            {content.attributes.categories.data.map((category: any, index: number) => (
-                              <div className="inline text-sm whitespace-nowrap truncate">{category.attributes.name}{content.attributes.categories.data.length - 1 === index ? "" : ", "}</div>
+                            {content.attributes.categories.data.map((category, index) => (
+                              <div key={index} className="inline text-sm whitespace-nowrap truncate">{category.attributes.name}{content.attributes.categories.data.length - 1 === index ? "" : ", "}</div>
                             ))
                             }
                           </div>

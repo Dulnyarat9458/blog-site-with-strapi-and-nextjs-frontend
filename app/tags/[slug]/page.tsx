@@ -6,7 +6,6 @@ interface Props {
   searchParams: { [key: string]: string | string[] | undefined }
 }
 
-
 interface Categories {
   data: Array<{
     attributes: {
@@ -14,7 +13,6 @@ interface Categories {
     }
   }>
 }
-
 
 interface Contents {
   data: {
@@ -39,26 +37,7 @@ interface Contents {
       name: string;
     }
   }
-
-
 }
-
-
-// interface Content {
-//   id: string;
-//   attributes: {
-//     cover: {
-//       data: {
-//         attributes: {
-//           url: string;
-//           alternativeText: string;
-//         }
-//       }
-//     },
-//     name: string;
-//     categories: Categories;
-//   };
-// }
 
 async function getData(slug: string) {
   const options = {
@@ -80,7 +59,7 @@ export default async function TagsPage(props: Props) {
   return (
     <div>
       <div className="mb-12">
-        <h1 className="text-center mx-auto font-bold text-4xl mt-14 mb-5">Tag: {contents.data.attributes.name}</h1>
+        <div className="text-center mx-auto font-bold text-4xl mt-14 mb-5">Tag: <h1 className="inline">{contents.data.attributes.name}</h1></div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {
             contents.data.attributes.contents.data.map(

@@ -36,7 +36,7 @@ export async function generateMetadata(
       'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,
     },
   };
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/contents/${slug}?populate=cover`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/contents/${slug}?populate=*`;
   const res = await fetch(url, options);
   const contents = await res.json();
   return {

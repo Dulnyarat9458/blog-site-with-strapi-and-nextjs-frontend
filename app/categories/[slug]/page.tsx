@@ -82,7 +82,6 @@ export default async function ContentPage(props: Props) {
                             height={1200}
                           />
                         </div>
-
                       </CardHeader>
                       <CardContent className="px-4 pt-4 pb-6 flex-1 relative">
                         <CardTitle className="text-xl mb-1">{content.attributes.name}</CardTitle>
@@ -102,7 +101,7 @@ export default async function ContentPage(props: Props) {
           }
         </div>
       </div>
-    </div >
+    </div>
   );
 }
 

@@ -14,7 +14,6 @@ interface Contents {
       name: string;
     };
   }>;
-
 }
 
 async function getData() {

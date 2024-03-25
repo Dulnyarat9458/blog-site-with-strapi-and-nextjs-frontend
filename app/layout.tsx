@@ -1,4 +1,5 @@
 import type, { Metadata } from "next";
+import { headers } from "next/headers";
 
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
@@ -8,7 +9,6 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "../lib/utils"
 
 import "./globals.css";
-
 
 export const fontSans = FontSans({
   subsets: ["latin"],
@@ -26,9 +26,18 @@ interface RootLayoutProps {
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
+  const headersList = headers();
+  const fullUrl = headersList.get('referer') || "";
+  const absolutePath = fullUrl;
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
+      <head >
+        <link
+          rel="canonical"
+          href={absolutePath}
+          key="canonical"
+        />
+      </head>
       <body
         className={cn(
           "bg-background font-sans antialiased",
@@ -45,7 +54,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <div className="container mx-auto min-h-screen-58">
             {children}
           </div>
-          <Footer/>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>

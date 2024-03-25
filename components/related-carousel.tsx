@@ -43,11 +43,8 @@ interface Props {
   cid: number;
 }
 
-
 export default function RelatedCarousel(props: Props) {
-
   const [contents, setContents] = useState<Contents>();
-
   function fetchData(tagsId: number[], categoriesId: number[], cid: number) {
     const options = {
       headers: {

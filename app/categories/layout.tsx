@@ -1,10 +1,4 @@
-import type { Metadata } from "next";
 import { Fira_Code as FontSans } from "next/font/google";
-import { ThemeProvider } from "@/components/theme-provider"
-
-
-import { Header } from "@/components/header";
-
 
 export const fontSans = FontSans({
   subsets: ["latin"],

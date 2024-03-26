@@ -1,12 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        remotePatterns: [
-            {
-                protocol: "https",
-                hostname: "**",
-            },
-        ],
+        domains: ['localhost','ethical-angel-fd95f1994e.media.strapiapp.com'],
     },
     reactStrictMode: false,
 };

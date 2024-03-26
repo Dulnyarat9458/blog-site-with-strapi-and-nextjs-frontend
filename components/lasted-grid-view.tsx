@@ -50,6 +50,7 @@ export function LastedGridView(props: LastedGridViewProps) {
                 height={1200}
                 alt={content.attributes.cover.data.attributes.alternativeText}
                 className="transition group-hover:scale-110 object-cover object-center h-full w-full duration-300"
+                placeholder='empty'
               />
             </div>
             <div

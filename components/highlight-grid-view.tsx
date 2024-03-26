@@ -59,6 +59,8 @@ export function HighlightGridView(props: HighlightGridViewProps) {
                   height={1200}
                   alt={content.attributes.content.data.attributes.cover.data.attributes.alternativeText}
                   className="transition group-hover:scale-110 object-cover object-center h-full w-full duration-300"
+                  priority={true}
+                  placeholder='empty'
                 />
               </div>
               <div

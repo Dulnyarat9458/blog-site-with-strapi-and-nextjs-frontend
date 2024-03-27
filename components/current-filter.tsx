@@ -1,7 +1,6 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react"
-
 
 interface Props {
   keyword: string;

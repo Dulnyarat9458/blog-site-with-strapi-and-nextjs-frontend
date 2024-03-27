@@ -21,22 +21,22 @@ import { DarkModeToggle } from "@/components/darkmode-toggle"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu"
+
+interface Categories {
+  id: number,
+  attributes: {
+    name: string
+  }
+}
+
+interface Tags {
+  id: number,
+  attributes: {
+    name: string
+  }
+}
+
 export function Header() {
-
-  interface Categories {
-    id: number,
-    attributes: {
-      name: string
-    }
-  }
-
-  interface Tags {
-    id: number,
-    attributes: {
-      name: string
-    }
-  }
-
   const router = useRouter();
   const { theme, setTheme } = useTheme()
   const [isSideOpen, setIsSideOpen] = useState(false);
@@ -118,10 +118,11 @@ export function Header() {
 
   useEffect(() => {
     const checkDarkInit = () => {
-      if (theme === 'dark') {
-        setIsMobileDarkmode(true);
+      if (theme === 'system') {
+        window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? setIsMobileDarkmode(true) : setIsMobileDarkmode(false);
       } else {
-        setIsMobileDarkmode(false);
+        theme === 'dark' ? setIsMobileDarkmode(true) : setIsMobileDarkmode(false);
       }
     }
     getInitialValue();

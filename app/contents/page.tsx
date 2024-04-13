@@ -51,6 +51,14 @@ interface Props {
   searchParams: SearchParams
 }
 
+interface Options {
+  cache: 'force-cache' | 'no-store';
+  headers: {
+    'Content-Type': string;
+    Authorization: string;
+  };
+}
+
 async function getLastedData(searchParams: SearchParams) {
   const keyword = searchParams.keyword;
   const category = searchParams.category;
@@ -61,7 +69,8 @@ async function getLastedData(searchParams: SearchParams) {
   let arrCategory;
   let arrTag;
 
-  const options = {
+  const options:Options = {
+    cache: 'no-store',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,

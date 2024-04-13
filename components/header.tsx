@@ -36,30 +36,29 @@ interface Tags {
   }
 }
 
+interface Categories {
+  id: number,
+  attributes: {
+    name: string
+  }
+}
+
+interface Tags {
+  id: number,
+  attributes: {
+    name: string
+  }
+}
+
+interface Options {
+  cache: 'force-cache' | 'no-store';
+  headers: {
+    'Content-Type': string;
+    Authorization: string;
+  };
+}
+
 export function Header() {
-
-  interface Categories {
-    id: number,
-    attributes: {
-      name: string
-    }
-  }
-
-  interface Tags {
-    id: number,
-    attributes: {
-      name: string
-    }
-  }
-
-  interface Options {
-    cache: 'force-cache' | 'no-store';
-    headers: {
-      'Content-Type': string;
-      Authorization: string;
-    };
-  }
-
   const router = useRouter();
   const { theme, setTheme } = useTheme()
   const [isSideOpen, setIsSideOpen] = useState(false);

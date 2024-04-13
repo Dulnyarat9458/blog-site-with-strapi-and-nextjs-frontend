@@ -24,13 +24,21 @@ interface Tags {
   }
 }
 
+interface Options {
+  cache: 'force-cache' | 'no-store';
+  headers: {
+    'Content-Type': string;
+    Authorization: string;
+  };
+}
 
 export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const slug = params.slug
-  const options = {
+  const options: Options = {
+    cache: 'no-store',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,
@@ -46,7 +54,8 @@ export async function generateMetadata(
 }
 
 async function getData(slug: string) {
-  const options = {
+  const options: Options = {
+    cache: 'no-store',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,

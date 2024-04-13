@@ -2,8 +2,17 @@ import Link from "next/link";
 import { LastedGridView } from "@/components/lasted-grid-view";
 import { HighlightGridView } from "@/components/highlight-grid-view"
 
+interface Options {
+  cache: 'force-cache' | 'no-store';
+  headers: {
+    'Content-Type': string;
+    Authorization: string;
+  };
+}
+
 async function getHighlightData() {
-  const options = {
+  const options: Options = {
+    cache: 'no-store',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,

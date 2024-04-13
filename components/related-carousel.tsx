@@ -13,7 +13,7 @@ interface Cover {
     attributes: {
       url: string;
       alternativeText: string;
-      
+
     }
   }
 }
@@ -43,10 +43,19 @@ interface Props {
   cid: number;
 }
 
+interface Options {
+  cache: 'force-cache' | 'no-store';
+  headers: {
+    'Content-Type': string;
+    Authorization: string;
+  };
+}
+
 export default function RelatedCarousel(props: Props) {
   const [contents, setContents] = useState<Contents>();
   function fetchData(tagsId: number[], categoriesId: number[], cid: number) {
-    const options = {
+    const options: Options = {
+      cache: 'no-store',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,

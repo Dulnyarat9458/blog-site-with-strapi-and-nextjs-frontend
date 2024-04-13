@@ -27,6 +27,14 @@ interface Tags {
   }>
 }
 
+interface Options {
+  cache: 'force-cache' | 'no-store';
+  headers: {
+    'Content-Type': string;
+    Authorization: string;
+  };
+}
+
 export function CurrentFilter(props: Props) {
   const [categories, setCategories] = useState<{ [key: number]: string }>([]);
   const [tags, setTags] = useState<{ [key: number]: string }>([]);
@@ -34,8 +42,8 @@ export function CurrentFilter(props: Props) {
   const getInitialValue = () => {
     const urlCategories = `${process.env.NEXT_PUBLIC_API_URL}/api/categories`
     const urlTag = `${process.env.NEXT_PUBLIC_API_URL}/api/tags`
-    const requestOptions = {
-      method: "GET",
+    const requestOptions: Options = {
+      cache: 'no-store',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,

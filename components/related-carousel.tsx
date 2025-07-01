@@ -117,10 +117,10 @@ export default function RelatedCarousel(props: Props) {
                     <Link href={"/contents/" + content.id} className="group point-cursor">
                       <div className="overflow-hidden object-cover object-center h-full w-full">
                         <Image
-                          src={process.env.NEXT_PUBLIC_API_URL + "" + content.attributes.cover.data.attributes.url}
+                          src={process.env.NEXT_PUBLIC_API_URL + "" + content?.attributes?.cover?.data?.attributes?.url}
                           width={1200}
                           height={1200}
-                          alt={content.attributes.cover.data.attributes.alternativeText}
+                          alt={content?.attributes?.cover?.data?.attributes?.alternativeText}
                           className="transition group-hover:scale-110 object-cover object-center h-full w-full duration-300"
                         />
                       </div>

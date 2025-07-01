@@ -49,7 +49,7 @@ interface Options {
 }
 
 async function getData(slug: string) {
-  const options:Options = {
+  const options: Options = {
     cache: 'no-store',
     headers: {
       'Content-Type': 'application/json',
@@ -82,14 +82,20 @@ export default async function ContentPage(props: Props) {
                     <Card className="h-full border-border duration-200 hover:border-primary hover:text-primary group flex flex-col">
                       <CardHeader className="p-0">
                         <div className="aspect-square w-full h-auto overflow-hidden rounded-t-lg">
-                          <Image
-                            src={process.env.NEXT_PUBLIC_API_URL + "" + content.attributes.cover.data.attributes.url}
-                            layout="responsive"
-                            alt={content.attributes.cover.data.attributes.alternativeText}
-                            className="w-full aspect-square object-cover rounded-t-lg duration-300 transition group-hover:scale-110"
-                            width={1200}
-                            height={1200}
-                          />
+                          {
+                            content?.attributes?.cover?.data?.attributes?.url
+                              ?
+                              <Image
+                                src={process.env.NEXT_PUBLIC_API_URL + "" + content?.attributes?.cover?.data?.attributes?.url}
+                                layout="responsive"
+                                alt={content?.attributes?.cover?.data?.attributes?.alternativeText}
+                                className="w-full aspect-square object-cover rounded-t-lg duration-300 transition group-hover:scale-110"
+                                width={1200}
+                                height={1200}
+                              />
+                              : <div className="h-full flex justify-center items-center bg-gray-500">No image</div>
+                          }
+
                         </div>
                       </CardHeader>
                       <CardContent className="px-4 pt-4 pb-6 flex-1 relative">

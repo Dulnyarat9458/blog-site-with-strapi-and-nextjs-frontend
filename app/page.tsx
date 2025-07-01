@@ -21,6 +21,7 @@ async function getHighlightData() {
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/highlights?populate[content][populate]=*&sort[0]=createdAt:desc&pagination[limit]=5`;
   const res = await fetch(url, options)
 
+
   if (!res.ok) {
     throw new Error('Failed to fetch data')
   }

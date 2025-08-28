@@ -195,7 +195,7 @@ export function Header() {
                                 <FormLabel className="text-base">Categories</FormLabel>
                               </div>
                               <div className="grid grid-cols-1 md:grid-cols-2">
-                                {categories.map((category, index) => (
+                                { categories.length > 0 && categories.map((category, index) => (
                                   <FormField
                                     key={index}
                                     control={form.control}
@@ -304,7 +304,7 @@ export function Header() {
                 <NavigationMenuTrigger>Categories</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="w-full min-w-52">
-                    {
+                    {(categories?.length > 0 ) && 
                       categories.map((category, index) => {
                         return (
                           <ListItem key={index} href={`/categories/${category.id}`} title={category.attributes.name} />
@@ -331,7 +331,7 @@ export function Header() {
           <div className="overflow-y-auto h-[85%]">
             <ul className="w-full overflow-y-auto">
               {
-                categories.map((category, index) => {
+                categories?.map((category, index) => {
                   return (
                     <Link key={index} href={`/categories/${category.id}`} onClick={closeSidebar}>
                       <li className="my-5" >{category.attributes.name} </li>

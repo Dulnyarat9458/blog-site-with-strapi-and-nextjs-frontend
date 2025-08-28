@@ -57,11 +57,11 @@ export default async function Home() {
       <div className="my-8"></div>
       <div className="flex justify-between items-center mt-14 mb-4">
         {
-          highlightData.data.length > 0 &&
+          lastedData.data.length > 0 &&
           <h2 className="font-bold text-4xl">LASTED</h2>
         }
         {
-          highlightData.data.length >= 4 &&
+          lastedData.data.length >= 4 &&
           <Link href='/contents' className="text-lg font-semibold text-primary duration-300 hover:text-foreground">MORE</Link>
         }
       </div>

@@ -100,7 +100,11 @@ export default function RelatedCarousel(props: Props) {
   return (
     <div className="my-12">
       <Separator />
-      <div className="font-bold text-2xl my-4">You may also be interested</div>
+      {contents?.data?.length ? (
+        <div className="font-bold text-2xl my-4">
+          You may also be interested
+        </div>
+      ) : null}
       <Carousel
         opts={{
           align: "start",

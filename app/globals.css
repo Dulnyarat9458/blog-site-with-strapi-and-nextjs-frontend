@@ -48,3 +48,8 @@
     --ring: 20.5 90.2% 48.2%;
   }
 }
+
+.richtext-content img {
+  display: block;
+  margin: 16px auto;
+}

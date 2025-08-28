@@ -104,7 +104,7 @@ export default async function ContentPage(props: Props) {
         <div className="mb-12">
           <h1 className="text-center mx-auto font-bold text-4xl mt-14 mb-5">{content.data.attributes.name}</h1>
         </div>
-        <div>
+        <div className="richtext-content">
           <BlocksRenderer content={content.data.attributes.block} />
         </div>
         <div className="my-8"></div>
